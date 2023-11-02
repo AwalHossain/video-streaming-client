@@ -159,6 +159,26 @@ export const UploadModal = ({ open, onClose }) => {
                                     onChange={handleFileSelect}
                                     accept="video/*"
                                 />
+                                {/* <label htmlFor='video'>
+                                        <input
+                                            style={{ display: 'none' }}
+                                            name='video'
+                                            accept='video/*'
+                                            id='video'
+                                            type='file'
+                                            onChange={(e) => {
+                                                const file = e.currentTarget.files[0];
+                                                formik.setFieldValue('videoFile', file);
+                                            }}
+                                        />
+                                        <Button
+                                            color='secondary'
+                                            variant='contained'
+                                            component='span'
+                                        >
+                                            Upload video
+                                        </Button>
+                                    </label> */}
 
                                 <label htmlFor="fileInput">
                                     <div
