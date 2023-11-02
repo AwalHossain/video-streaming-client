@@ -1,13 +1,15 @@
 import { Close as CloseIcon } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import {
     Button,
     FormControl,
+    Grid,
     IconButton,
     Modal,
     Paper,
-    Stack,
-    TextField
+    Step,
+    StepLabel,
+    Stepper,
+    TextField,
 } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,28 +21,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 
-const StyledContent = styled('div')(({ theme }) => ({
-    maxWidth: 600,
-    margin: 'auto',
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'left',
-    flexDirection: 'column',
-    padding: theme.spacing(12, 0),
-}));
-
-/**
- *  Create a MUI form to save below video properties: 
-    title, description, visibility, 
-    thumbnailUrl, language, recordingDate, 
-    category,
- */
 
 const validationSchema = yup.object({
     title: yup.string().required('Title is required'),
@@ -51,7 +36,6 @@ const validationSchema = yup.object({
     recordingDate: yup.date().required('Recording date is required'),
     category: yup.string().required('Category is required'),
 });
-
 
 const UploadModalContainer = styled(Paper)(({ theme }) => ({
     display: 'flex',
@@ -67,10 +51,9 @@ const UploadModalContainer = styled(Paper)(({ theme }) => ({
     height: '90%', // Set the height to 90% for big screen sizes
     maxWidth: 1000, // Set the maximum width to 600px
     textAlign: 'center',
-    bgcolor: 'gray', // Set the background color to gray
+    bgcolor: 'gray',
     [theme.breakpoints.down('sm')]: {
-        // Make the modal responsive for small screen sizes
-        width: '90%',
+        width: '100%',
     },
     '&:focus': {
         outline: 'none',
@@ -92,9 +75,7 @@ const UploadButton = styled(Button)(({ theme }) => ({
     width: '100%',
 }));
 
-
 const VideoForm = () => {
-
     const [open, setOpen] = useState(true);
 
     const handleClose = () => {
@@ -102,15 +83,12 @@ const VideoForm = () => {
     };
 
     const formik = useFormik({
-        initialErrors: {
-            videoFile: 'Video file is required',
-        },
         initialValues: {
-            title: 'title1',
-            description: 'desc',
+            title: '',
+            description: '',
             visibility: 'public',
-            thumbnailUrl: 'test',
-            language: 'Bangla',
+            thumbnailUrl: '',
+            language: 'English',
             recordingDate: new Date(),
             category: 'Education',
             videoFile: null,
@@ -118,29 +96,33 @@ const VideoForm = () => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             // await postToServer(values);
-        },
-        validate: (values) => {
-            const errors = {};
-            if (!values.videoFile) {
-                errors.videoFile = 'Video file is required';
-            }
-            // check videoFile size
-            if (values.videoFile?.size > 52428000) {
-                errors.videoFile = 'Video file size should be less than 50MB';
-            }
-            console.log(values.videoFile?.type);
-            // check videoFile type, must be video/mp4 or video/x-matroska
-            if (
-                values.videoFile?.type !== 'video/mp4' &&
-                values.videoFile?.type !== 'video/webm'
-            ) {
-                errors.videoFile = 'Video file type should be .mp4 or .webm';
-            }
-
-            return errors;
+            console.log(values);
         },
     });
 
+    const [step, setStep] = useState(1);
+    const steps = ['Video Details', 'Visibility and Publish'];
+
+    const nextStep = () => {
+        if (step === 1) {
+            // Validate step 1
+            if (formik.values.title && formik.values.description) {
+                setStep(step + 1);
+            }
+        } else if (step === 2) {
+            // Validate step 2
+            if (formik.values.visibility && formik.values.thumbnailUrl) {
+                setStep(step + 1);
+            }
+        }
+        // Add more else if blocks for additional steps
+    };
+
+    const prevStep = () => {
+        if (step > 1) {
+            setStep(step - 1);
+        }
+    };
 
     return (
         <>
@@ -150,145 +132,158 @@ const VideoForm = () => {
                         <CloseIcon />
                     </CloseIconButton>
                     <form onSubmit={formik.handleSubmit}>
-                        <Stack spacing={3}>
-                            <label htmlFor='video'>
-                                <input
-                                    style={{ display: 'none' }}
-                                    name='video'
-                                    accept='video/*'
-                                    id='video'
-                                    type='file'
-                                    onChange={(e) => {
-                                        const file = e.currentTarget.files[0];
-                                        formik.setFieldValue('videoFile', file);
-                                    }}
-                                />
-                                <Button
-                                    color='secondary'
+                        <Stepper activeStep={step - 1} alternativeLabel>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                        <Grid container spacing={5} marginY={5}>
+                            {step === 1 && (
+                                <>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            label="Video file name"
+                                            value={formik.values.videoFile?.name}
+                                            error={Boolean(formik.errors?.videoFile)}
+                                            helperText={formik.errors?.videoFile}
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            id="title"
+                                            name="title"
+                                            label="Video title"
+                                            value={formik.values.title}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.title && Boolean(formik.errors.title)}
+                                            helperText={formik.touched.title && formik.errors.title}
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            id="description"
+                                            name="description"
+                                            multiline
+                                            label="Video description"
+                                            value={formik.values.description}
+                                            onChange={formik.handleChange}
+                                            error={
+                                                formik.touched.description &&
+                                                Boolean(formik.errors.description)
+                                            }
+                                            helperText={
+                                                formik.touched.description && formik.errors.description
+                                            }
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                </>
+                            )}
+                            {step === 2 && (
+                                <>
+
+                                    <Grid item xs={12} md={6} spacing={5}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="visibility-select-label">Visibility</InputLabel>
+                                            <Select
+                                                labelId="visibility-select-label"
+                                                id="visibility-simple-select"
+                                                name="visibility"
+                                                label="Visibility"
+                                                value={formik.values.visibility}
+                                                onChange={formik.handleChange}
+                                                error={Boolean(formik.errors.visibility)}
+                                                fullWidth
+                                            >
+                                                <MenuItem value="public">Public</MenuItem>
+                                                <MenuItem value="private">Private</MenuItem>
+                                                <MenuItem value="unlisted">Unlisted</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={6} spacing={5}>
+                                        <TextField
+                                            id="thumbnailUrl"
+                                            name="thumbnailUrl"
+                                            label="Thumbnail URL"
+                                            value={formik.values.thumbnailUrl}
+                                            onChange={formik.handleChange}
+                                            error={
+                                                formik.touched.thumbnailUrl &&
+                                                Boolean(formik.errors.thumbnailUrl)
+                                            }
+                                            helperText={
+                                                formik.touched.thumbnailUrl && formik.errors.thumbnailUrl
+                                            }
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6} spacing={5}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="language-select-label">Language</InputLabel>
+                                            <Select
+                                                labelId="language-select-label"
+                                                id="language-simple-select"
+                                                label="Language"
+                                                value={formik.values.language}
+                                                onChange={formik.handleChange}
+                                                error={Boolean(formik.errors.language)}
+                                                fullWidth
+                                            >
+                                                <MenuItem value="English">English</MenuItem>
+                                                <MenuItem value="Bangla">Bangla</MenuItem>
+                                                <MenuItem value="Spanish">Spanish</MenuItem>
+                                                <MenuItem value="Hindi">Hindi</MenuItem>
+                                                <MenuItem value="Urdu">Urdu</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={6} spacing={5}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DatePicker
+                                                label="Recording Date"
+                                                value={formik.values.recordingDate}
+                                                inputFormat="DD/MM/YYYY"
+                                                onChange={(newValue) => {
+                                                    formik.setFieldValue('recordingDate', newValue);
+                                                }}
+                                                renderInput={(params) => <TextField {...params} fullWidth />}
+                                            />
+                                        </LocalizationProvider>
+                                    </Grid>
+                                </>
+
+                            )}
+                        </Grid>
+                        <div>
+                            {step === 2 && (
+                                <LoadingButton
+                                    //fullWidth
+                                    size='large'
+                                    type='submit'
                                     variant='contained'
-                                    component='span'
+                                    disabled={formik.isSubmitting || !formik.isValid}
                                 >
-                                    Upload video
-                                </Button>
-                            </label>
-                            {/* video file name display here */}
-                            <TextField
-                                value={formik.values.videoFile?.name}
-                                error={Boolean(formik.errors?.videoFile)}
-                                helperText={formik.errors?.videoFile}
-                            />
-                            <TextField
-                                id='title'
-                                name='title'
-                                label='Video title'
-                                value={formik.values.title}
-                                onChange={formik.handleChange}
-                                error={formik.touched.title && Boolean(formik.errors.title)}
-                                helperText={formik.touched.title && formik.errors.title}
-                            />
-                            <TextField
-                                id='description'
-                                name='description'
-                                label='Video description'
-                                value={formik.values.description}
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.description &&
-                                    Boolean(formik.errors.description)
-                                }
-                                helperText={
-                                    formik.touched.description && formik.errors.description
-                                }
-                            />
-                            <FormControl fullWidth>
-                                <InputLabel id='visibility-select-label'>
-                                    Visibility
-                                </InputLabel>
-                                <Select
-                                    labelId='visibility-select-label'
-                                    id='visibility-simple-select'
-                                    name='visibility'
-                                    label='Visibility'
-                                    value={formik.values.visibility}
-                                    onChange={formik.handleChange}
-                                    error={Boolean(formik.errors.visibility)}
-                                    helperText={formik.errors.visibility}
-                                >
-                                    <MenuItem value={'public'}>Public</MenuItem>
-                                    <MenuItem value={'private'}>Private</MenuItem>
-                                    <MenuItem value={'unlisted'}>Unlisted</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <TextField
-                                id='thumbnailUrl'
-                                name='thumbnailUrl'
-                                label='Thumbnail URL'
-                                value={formik.values.thumbnailUrl}
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.thumbnailUrl &&
-                                    Boolean(formik.errors.thumbnailUrl)
-                                }
-                                helperText={
-                                    formik.touched.thumbnailUrl && formik.errors.thumbnailUrl
-                                }
-                            />
-                            <FormControl fullWidth>
-                                <InputLabel id='language-select-label'>Language</InputLabel>
-                                <Select
-                                    labelId='language-select-label'
-                                    id='language-simple-select'
-                                    label='Language'
-                                    value={formik.values.language}
-                                    onChange={formik.handleChange}
-                                    error={Boolean(formik.errors.language)}
-                                    helperText={formik.errors.language}
-                                >
-                                    <MenuItem value={'English'}>English</MenuItem>
-                                    <MenuItem value={'Bangla'}>Bangla</MenuItem>
-                                    <MenuItem value={'Spanish'}>Spanish</MenuItem>
-                                    <MenuItem value={'Hindi'}>Hindi</MenuItem>
-                                    <MenuItem value={'Urdu'}>Urdu</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker
-                                    label='Basic example'
-                                    value={formik.values.recordingDate}
-                                    inputFormat='DD/MM/YYYY'
-                                    onChange={(newValue) => {
-                                        formik.setFieldValue('recordingDate', newValue);
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                            <FormControl fullWidth>
-                                <InputLabel id='category-select-label'>Category</InputLabel>
-                                <Select
-                                    labelId='category-select-label'
-                                    id='category-simple-select'
-                                    value={formik.values.category}
-                                    label='Category'
-                                    onChange={formik.handleChange}
-                                    error={Boolean(formik.errors.category)}
-                                    helperText={formik.errors.category}
-                                >
-                                    <MenuItem value={'Education'}>Education</MenuItem>
-                                    <MenuItem value={'Technology'}>Technology</MenuItem>
-                                    <MenuItem value={'Travel'}>Travel</MenuItem>
-                                    <MenuItem value={'Others'}>Others</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <LoadingButton
-                                //fullWidth
-                                size='large'
-                                type='submit'
-                                variant='contained'
-                                disabled={formik.isSubmitting || !formik.isValid}
-                            >
-                                Upload
-                            </LoadingButton>
-                        </Stack>
+                                    Upload
+                                </LoadingButton>
+                            )}
+                        </div>
+                        <div
+                            style={{
+                                marginTop: 20,
+                            }}
+                        >
+                            <Button onClick={prevStep} disabled={step === 1}>
+                                Back
+                            </Button>
+                            <Button onClick={nextStep} disabled={step === 2}>
+                                Next
+                            </Button>
+                        </div>
                     </form>
                 </UploadModalContainer>
             </Modal>
