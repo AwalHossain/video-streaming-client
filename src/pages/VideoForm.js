@@ -1,29 +1,24 @@
 import { Close as CloseIcon } from '@mui/icons-material';
 import {
     Button,
-    FormControl,
     Grid,
     IconButton,
     Modal,
     Paper,
     Step,
     StepLabel,
-    Stepper,
-    TextField,
+    Stepper
 } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { styled } from '@mui/system';
 import React, { useState } from 'react';
+import StepOne from '../components/upload/StepOneForm';
+import StepTwo from '../components/upload/StepTwoForm';
 
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useAppContext } from '../contexts/context';
 
 
 
@@ -69,15 +64,11 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(2),
 }));
 
-const UploadButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    width: '100%',
-}));
+
 
 const VideoForm = () => {
     const [open, setOpen] = useState(true);
-
+    const { setProgress } = useAppContext();
     const handleClose = () => {
         setOpen(false);
     };
@@ -141,122 +132,11 @@ const VideoForm = () => {
                         </Stepper>
                         <Grid container spacing={5} marginY={5}>
                             {step === 1 && (
-                                <>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            label="Video file name"
-                                            value={formik.values.videoFile?.name}
-                                            error={Boolean(formik.errors?.videoFile)}
-                                            helperText={formik.errors?.videoFile}
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            id="title"
-                                            name="title"
-                                            label="Video title"
-                                            value={formik.values.title}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.title && Boolean(formik.errors.title)}
-                                            helperText={formik.touched.title && formik.errors.title}
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="description"
-                                            name="description"
-                                            multiline
-                                            label="Video description"
-                                            value={formik.values.description}
-                                            onChange={formik.handleChange}
-                                            error={
-                                                formik.touched.description &&
-                                                Boolean(formik.errors.description)
-                                            }
-                                            helperText={
-                                                formik.touched.description && formik.errors.description
-                                            }
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                </>
+                                <StepOne formik={formik} />
+
                             )}
                             {step === 2 && (
-                                <>
-
-                                    <Grid item xs={12} md={6} spacing={5}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="visibility-select-label">Visibility</InputLabel>
-                                            <Select
-                                                labelId="visibility-select-label"
-                                                id="visibility-simple-select"
-                                                name="visibility"
-                                                label="Visibility"
-                                                value={formik.values.visibility}
-                                                onChange={formik.handleChange}
-                                                error={Boolean(formik.errors.visibility)}
-                                                fullWidth
-                                            >
-                                                <MenuItem value="public">Public</MenuItem>
-                                                <MenuItem value="private">Private</MenuItem>
-                                                <MenuItem value="unlisted">Unlisted</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={6} spacing={5}>
-                                        <TextField
-                                            id="thumbnailUrl"
-                                            name="thumbnailUrl"
-                                            label="Thumbnail URL"
-                                            value={formik.values.thumbnailUrl}
-                                            onChange={formik.handleChange}
-                                            error={
-                                                formik.touched.thumbnailUrl &&
-                                                Boolean(formik.errors.thumbnailUrl)
-                                            }
-                                            helperText={
-                                                formik.touched.thumbnailUrl && formik.errors.thumbnailUrl
-                                            }
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6} spacing={5}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="language-select-label">Language</InputLabel>
-                                            <Select
-                                                labelId="language-select-label"
-                                                id="language-simple-select"
-                                                label="Language"
-                                                value={formik.values.language}
-                                                onChange={formik.handleChange}
-                                                error={Boolean(formik.errors.language)}
-                                                fullWidth
-                                            >
-                                                <MenuItem value="English">English</MenuItem>
-                                                <MenuItem value="Bangla">Bangla</MenuItem>
-                                                <MenuItem value="Spanish">Spanish</MenuItem>
-                                                <MenuItem value="Hindi">Hindi</MenuItem>
-                                                <MenuItem value="Urdu">Urdu</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} md={6} spacing={5}>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DatePicker
-                                                label="Recording Date"
-                                                value={formik.values.recordingDate}
-                                                inputFormat="DD/MM/YYYY"
-                                                onChange={(newValue) => {
-                                                    formik.setFieldValue('recordingDate', newValue);
-                                                }}
-                                                renderInput={(params) => <TextField {...params} fullWidth />}
-                                            />
-                                        </LocalizationProvider>
-                                    </Grid>
-                                </>
-
+                                <StepTwo formik={formik} />
                             )}
                         </Grid>
                         <div>
