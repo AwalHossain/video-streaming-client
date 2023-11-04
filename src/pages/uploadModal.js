@@ -24,6 +24,8 @@ import {
     PictureInPicture as ImageIcon,
     VideoLibrary as VideoLibraryIcon
 } from '@mui/icons-material';
+import axios from 'axios';
+import { useAppContext } from '../contexts/context';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -80,7 +82,7 @@ const validationSchema = yup.object({
     video: yup.mixed().test(
         'fileFormat',
         'Unsupported Format',
-        (value) => value && ["video/*", "video/x-matroska"].includes(value.type)
+        (value) => value && ["vide/avi", "video/mp4", "video/x-matroska"].includes(value.type)
     ).test(
         'fileSize',
         'File Size is too large',
@@ -103,6 +105,7 @@ export const UploadModal = ({ open, onClose }) => {
     const [showForm, setShowForm] = useState(false);
     const [alertType, setAlertType] = useState('success');
     const theme = useTheme();
+    const { setProgress } = useAppContext();
     // Inside your component
 
 
@@ -115,6 +118,21 @@ export const UploadModal = ({ open, onClose }) => {
         onSubmit: async (values) => {
             // await postToServer(values);
             console.log(values);
+            const data = await axios.post('http://localhost:5000/api/v1/videos/upload', values, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                    setUploading(true);
+                    const { loaded, total } = progressEvent;
+                    const percent = Math.floor((loaded * 100) / total);
+                    setProgress(percent);
+                }
+            }).then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            });
         },
     });
 
