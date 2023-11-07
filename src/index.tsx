@@ -3,8 +3,10 @@ import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { SocketProvider } from "./contexts/SocketContext";
-//
+import { AppProvider } from "./contexts/context";
+
+
+
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 
@@ -15,9 +17,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <HelmetProvider>
     <BrowserRouter>
-      <SocketProvider>
+      <AppProvider>
         <App />
-      </SocketProvider>
+      </AppProvider>
     </BrowserRouter>
   </HelmetProvider>
 );
