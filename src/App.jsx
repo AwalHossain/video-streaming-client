@@ -35,11 +35,13 @@ export default function App() {
   const [wsResponse, setWsResponse] = useState(null);
   // const [process, setProcess] = useState({});
   const [process, dispatch] = useReducer(processReducer, {});
-
-  // console.log("facts", facts);
+  const { progress } = useAppContext();
 
   useEffect(() => {
     if (socket) {
+      // console.log("facts", progress);
+      // dispatch({ type: "SET_PROCESS", payload: progress });
+
       socket.on("msg", (msg) => {
         console.log("hello", msg);
         setWsResponse(
@@ -49,6 +51,10 @@ export default function App() {
 
       socket.on("disconnect", () => {
         dispatch({ type: "RESET_PROCESS" });
+      });
+      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
+        console.log("NOTIFY_VIDEO_INITIAL_DB_INFO", data);
+        // setWsResponse(`${data.message}`);
       });
 
       socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED, (data) => {
@@ -108,7 +114,7 @@ export default function App() {
         socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_PUBLISHED);
       };
     }
-  }, [socket]);
+  }, [socket, progress]);
 
   return (
     <ThemeProvider>
