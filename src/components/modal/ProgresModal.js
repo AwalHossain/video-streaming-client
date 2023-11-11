@@ -1,31 +1,15 @@
-import { Box, CircularProgress } from '@mui/material';
-import React from 'react';
-import { useAppContext } from '../../contexts/context';
+import { Box, LinearProgress, Typography } from '@mui/material';
 
-const ProgressModal = ({ name, progress }) => {
-
-    const { socket } = useAppContext();
-
-    React.useEffect(() => {
-        if (progress === 100) {
-            setTimeout(() => {
-                socket.emit("getFiles");
-            }, 1000);
-        }
-    }, [progress, socket]);
+function ProgressModal({ name, status, progress, fileName }) {
 
     return (
         <Box
             sx={{
-                position: 'fixed',
-                top: 0,
-                right: 0,
-                margin: '1em',
-                zIndex: 9999, // Ensure the modal is above other elements
+                zIndex: 9999,
                 backgroundColor: "#252525",
                 width: "400px",
-                height: "auto   ",
-                padding: "1em",
+                height: "auto",
+                padding: "10px",
                 color: "white",
                 borderRadius: "10px",
                 display: "flex",
@@ -34,16 +18,25 @@ const ProgressModal = ({ name, progress }) => {
                 alignItems: "center",
             }}
         >
-            <p>{name} is processing</p>
-            <CircularProgress variant="determinate" value={progress}
-                sx={{
-                    color: '#ff0000', // Change the color of the progress bar
-                    width: '100px !important', // Change the width of the progress bar
-                    height: '100px !important', // Change the height of the progress bar
-                }}
-            />
+            <Typography variant="subtitle1" fontSize={"12px"} component="p" color="text.secondary">
+                {`${name} is processing...`}
+            </Typography>
+            <Typography variant="subtitle2" component="p" fontSize={"10px"} color="text.secondary">
+                {`${fileName}`}
+            </Typography>
+            <Box sx={{ width: '100%', marginTop: '10px' }}>
+                <LinearProgress variant="determinate" value={progress} />
+            </Box>
+            {
+                progress ? (
+                    <Typography variant="caption" component="div" color="text.secondary">
+                        {`${Math.round(progress)}%`}
+                    </Typography>
+                ) : <p>Uplooading......</p>
+            }
+
         </Box>
     );
-};
+}
 
 export default ProgressModal;
