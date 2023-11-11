@@ -9,7 +9,6 @@ import {
     Paper,
     Typography
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
 import { useFormik } from 'formik';
 import Lottie from "lottie-react";
@@ -91,20 +90,19 @@ const validationSchema = yup.object({
     image: yup.mixed().test(
         'fileFormat',
         'Unsupported Format',
-        (value) => value && ['image/jpg', 'image/jpeg', 'image/png'].includes(value.type)
+        (value) => !value || ['image/jpg', 'image/jpeg', 'image/png'].includes(value.type)
     ).test(
         'fileSize',
         'File Size is too large',
-        (value) => value && value.size <= 2000000
-    )
+        (value) => !value || value.size <= 2000000
+    ).optional(),
 });
 
 
 export const UploadModal = ({ open, onClose }) => {
     const [uploading, setUploading] = useState(false); // State to track if upload is in progress
     const [showForm, setShowForm] = useState(false);
-    const [alertType, setAlertType] = useState('success');
-    const theme = useTheme();
+    const [data, setData] = useState(null); // State to track data to be sent to the server
     const { setProgress } = useAppContext();
     // Inside your component
 
@@ -116,7 +114,6 @@ export const UploadModal = ({ open, onClose }) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            // await postToServer(values);
             console.log(values);
             const data = await axios.post('http://localhost:5000/api/v1/videos/upload', values, {
                 headers: {
@@ -124,12 +121,25 @@ export const UploadModal = ({ open, onClose }) => {
                 },
                 onUploadProgress: (progressEvent) => {
                     setUploading(true);
+
                     const { loaded, total } = progressEvent;
                     const percent = Math.floor((loaded * 100) / total);
-                    setProgress(percent);
+                    setProgress({
+                        status: 'processing',
+                        name: "Video Upload",
+                        fileName: values.video.name,
+                        progress: percent,
+                    });
                 }
             }).then((res) => {
-                console.log(res);
+                setData(res.data);
+                setProgress({
+                    status: 'completed',
+                    name: "Video Upload",
+                    fileName: values.video.name,
+                    progress: 100,
+                });
+                // setUploading(false);
             }).catch((err) => {
                 console.log(err);
             });
@@ -177,7 +187,7 @@ export const UploadModal = ({ open, onClose }) => {
                                             animationData={rocket}
                                             onAnimationEnd={() => console.log('Animation End!')}
                                             onComplete={handleAnimationComplete}
-                                            loop={false} // Set to true for the animation to repeat
+                                            loop={false} // Set to true for the animation to rep
                                             speed={2.5} // Set the speed of the animation
                                             segments={[0, 20]} // Set the start and end frames of the animation
                                         />
@@ -252,7 +262,7 @@ export const UploadModal = ({ open, onClose }) => {
                                             <Button type="submit" variant="contained" color="primary" style={{
                                                 margin: '20px 0',
                                             }} sx={{ m: 1 }}
-                                                disabled={formik.isSubmitting || !formik.isValid}
+                                                disabled={formik.isSubmitting || !formik.values.video}
                                             >
                                                 Submit
                                             </Button>
@@ -299,7 +309,7 @@ export const UploadModal = ({ open, onClose }) => {
                 </UploadModalContainer>
             </Modal>
             {
-                showForm && <VideoForm />
+                showForm && <VideoForm data={data?.data} />
             }
         </>
     );
