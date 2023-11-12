@@ -68,14 +68,32 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 
 const VideoForm = () => {
     const [open, setOpen] = useState(true);
-    const { setProgress } = useAppContext();
+    const [videoData, setVideoData] = useState(null);
+    const { socket } = useAppContext();
+
+    // React.useEffect(() => {
+    //     const handleVideoInfo = (data) => {
+    //         setVideoData(data);
+    //         console.log(data, 'getting from socket');
+    //     };
+
+    //     socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
+    //         console.log(data, 'getting from socket');
+    //     });
+
+    //     // Clean up the event listener when the component unmounts
+    //     return () => {
+    //         socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, handleVideoInfo);
+    //     };
+    // }, [socket]);
+
     const handleClose = () => {
         setOpen(false);
     };
-
+    console.log(videoData?.originalName, 'videData');
     const formik = useFormik({
         initialValues: {
-            title: '',
+            title: videoData?.originalName || '',
             description: '',
             visibility: 'public',
             thumbnailUrl: '',
@@ -84,12 +102,21 @@ const VideoForm = () => {
             category: 'Education',
             videoFile: null,
         },
+        // enableReinitialize: true,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             // await postToServer(values);
             console.log(values);
         },
     });
+
+    // React.useEffect(() => {
+    //     formik.setValues({
+    //         ...formik.values,
+    //         title: data?.originalName,
+    //     });
+
+    // }, [data, formik]);
 
     const [step, setStep] = useState(1);
     const steps = ['Video Details', 'Visibility and Publish'];

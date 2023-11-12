@@ -132,6 +132,7 @@ export default function App() {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
+            variant="outlined"
             onClose={() => {
               setWsResponse(null);
             }}
