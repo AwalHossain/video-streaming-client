@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
+import { Button, Container, Divider, Link, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
-import Logo from '../components/logo';
 import Iconify from '../components/iconify';
+import Logo from '../components/logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
 
@@ -46,7 +46,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Login </title>
       </Helmet>
 
       <StyledRoot>
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
+              <Link variant="subtitle2" href='/register'>Signup</Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>

@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 // @mui
-import {
-  Button
-} from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 
@@ -42,27 +39,16 @@ const StyledContent = styled("div")(({ theme }) => ({
 
 
 export default function VideoUploadPage() {
-  const [uploadResponse, setUploadResponse] = useState(null);
-  const [alertType, setAlertType] = useState("success");
-  const [uploadProgress, setUploadProgress] = useState(0);
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
     setOpen(false);
+
+    // window.history.back();
   };
 
   return (
-    <div>
-      <Button onClick={handleOpen} variant="outlined">
-        Upload Video
-      </Button>
-      <UploadModal open={open} onClose={handleClose} />
-    </div>
+    <UploadModal open={open} onClose={handleClose} />
   );
 };
 
