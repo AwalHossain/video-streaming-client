@@ -9,7 +9,7 @@ export const authApi = apiSlice.injectEndpoints(
                 query: (data) => ({
                     url: "/auth/signup",
                     method: "POST",
-                    body: data
+                    data
                 }),
 
                 async onQueryStarted(arg, {
@@ -34,7 +34,8 @@ export const authApi = apiSlice.injectEndpoints(
                 query: (data) => ({
                     url: "/auth/login",
                     method: "POST",
-                    body: data
+                    // contentType: "application/json",
+                    data
                 }),
                 async onQueryStarted(arg, {
                     queryFulfilled,
@@ -58,7 +59,6 @@ export const authApi = apiSlice.injectEndpoints(
                 query: (data) => ({
                     url: "/auth/check-session",
                     method: "GET",
-                    credentials: 'include'
                 }),
                 async onQueryStarted(arg, {
                     queryFulfilled,
