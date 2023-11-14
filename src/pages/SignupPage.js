@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
-import Iconify from '../components/iconify';
 import Logo from '../components/logo';
 // sections
 import RegistrationForm from '../sections/auth/login/RegistrationForm';
@@ -24,8 +23,8 @@ const StyledSection = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    boxShadow: theme.customShadows.card,
-    backgroundColor: theme.palette.background.default,
+    // boxShadow: theme.customShadows.card,
+    // backgroundColor: theme.palette.background.default,
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
@@ -63,7 +62,20 @@ export default function SignupPage() {
                         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
                             Hi, There
                         </Typography>
-                        <img src="/assets/illustrations/illustration_login.png" alt="login" />
+                        <div
+                            styled={{
+                                width: '100%', height: '100%',
+                                objectFit: 'cover',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginLeft: 'auto',
+                            }}
+                        >
+
+                            <img
+                                src="/assets/signup.png" alt="login" />
+                        </div>
                     </StyledSection>
                 )}
 
@@ -80,16 +92,16 @@ export default function SignupPage() {
 
                         <Stack direction="row" spacing={2}>
                             <Button fullWidth size="large" color="inherit" variant="outlined">
-                                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
+                                SignUp with Google
                             </Button>
-
+                            {/* 
                             <Button fullWidth size="large" color="inherit" variant="outlined">
                                 <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
                             </Button>
 
                             <Button fullWidth size="large" color="inherit" variant="outlined">
                                 <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
-                            </Button>
+                            </Button> */}
                         </Stack>
 
                         <Divider sx={{ my: 3 }}>

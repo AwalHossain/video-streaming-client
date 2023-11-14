@@ -24,8 +24,8 @@ const StyledSection = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  boxShadow: theme.customShadows.card,
-  backgroundColor: theme.palette.background.default,
+  // boxShadow: theme.customShadows.card,
+  // backgroundColor: theme.palette.background.default,
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
@@ -63,7 +63,17 @@ export default function LoginPage() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back
             </Typography>
-            <img src="/assets/illustrations/illustration_login.png" alt="login" />
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img src="/assets/login.png" alt="login" />
+            </div>
           </StyledSection>
         )}
 
@@ -80,15 +90,8 @@ export default function LoginPage() {
 
             <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
+                Login with Google
+                <Iconify icon="eva:google-fill" color="#DF3E30" width={"100%"} height={"100%"} />
               </Button>
             </Stack>
 
