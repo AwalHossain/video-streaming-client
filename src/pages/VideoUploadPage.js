@@ -1,21 +1,9 @@
 import React from 'react';
 // @mui
-import { styled } from "@mui/material/styles";
 
 
 import { UploadModal } from './uploadModal';
 
-const StyledContent = styled("div")(({ theme }) => ({
-  maxWidth: 600,
-  margin: "auto",
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignContent: "center",
-  alignItems: "left",
-  flexDirection: "column",
-  padding: theme.spacing(12, 0),
-}));
 
 // interface FormValues {
 //   title: string;
