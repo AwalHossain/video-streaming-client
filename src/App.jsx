@@ -11,6 +11,7 @@ import ThemeProvider from "./theme";
 import ProgressModal from "./components/modal/ProgresModal";
 import ScrollToTop from "./components/scroll-to-top";
 import { useAppContext } from "./contexts/context";
+import useAuth from "./hooks/useAuth";
 import { NOTIFY_EVENTS } from "./utils/constants";
 
 const processReducer = (state, action) => {
@@ -115,6 +116,8 @@ export default function App() {
       };
     }
   }, [socket, progress]);
+
+  const { user, loading } = useAuth();
 
   return (
     <ThemeProvider>
