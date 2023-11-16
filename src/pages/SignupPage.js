@@ -42,6 +42,14 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function SignupPage() {
     const mdUp = useResponsive('up', 'md');
 
+    // const { data } = useGoogleLoginQuery();
+
+    const handleGoogle = () => {
+        window.open(`http://localhost:5000/api/v1/auth/google`, '_self');
+    }
+
+
+    // console.log(data, 'data goole');
     return (
         <>
             <Helmet>
@@ -91,8 +99,10 @@ export default function SignupPage() {
                         </Typography>
 
                         <Stack direction="row" spacing={2}>
-                            <Button fullWidth size="large" color="inherit" variant="outlined">
-                                SignUp with Google
+                            <Button onClick={handleGoogle} fullWidth size="large" color="inherit" variant="outlined">
+
+                                Sign Up with Google
+
                             </Button>
                             {/* 
                             <Button fullWidth size="large" color="inherit" variant="outlined">
