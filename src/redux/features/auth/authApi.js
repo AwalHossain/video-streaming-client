@@ -21,9 +21,7 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn({
-                                user: response.data.data
-                            })
+                            userLoggedIn(response?.data)
                         )
                     } catch (err) {
 
@@ -46,9 +44,7 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn({
-                                user: response.data.data
-                            })
+                            userLoggedIn(response?.data)
                         )
                     } catch (err) {
 
@@ -69,9 +65,7 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn({
-                                user: response.data.user
-                            })
+                            userLoggedIn(response?.data)
                         )
                     } catch (err) {
 
@@ -89,12 +83,10 @@ export const authApi = apiSlice.injectEndpoints(
                 }) {
                     try {
                         const response = await queryFulfilled;
-                        console.log(response.data?.data, 'checkSession');
+                        console.log(response.data, 'checkSession');
 
                         dispatch(
-                            userLoggedIn({
-                                user: response?.data?.data
-                            })
+                            userLoggedIn(response?.data)
                         )
                     } catch (err) {
 
