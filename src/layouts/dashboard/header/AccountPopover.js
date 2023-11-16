@@ -1,10 +1,11 @@
 import { useState } from 'react';
 // @mui
+import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
+import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
-
+import { useLogoutMutation } from '../../../redux/features/auth/authApi';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -26,14 +27,28 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
+  const [logout, { isLoading, data }] = useLogoutMutation();
+
   const handleClose = () => {
     setOpen(null);
   };
+
+  const handleLogOut = async () => {
+    try {
+      await logout().unwrap();
+      // delete the cookie
+      handleClose();
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <>
@@ -54,7 +69,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src={"https://i.ibb.co/SK4Rj2T/user.png"} alt="photoURL" />
       </IconButton>
 
       <Popover
@@ -97,7 +112,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
