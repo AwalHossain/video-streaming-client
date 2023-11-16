@@ -45,7 +45,7 @@ Header.propTypes = {
 
 export default function Header({ onOpenNav }) {
   // const { user, loading } = useAuth();
-  const { user } = useSelector(state => state.auth.user);
+  const { user } = useSelector(state => state.auth);
 
   console.log('user header index', user);
   return (
