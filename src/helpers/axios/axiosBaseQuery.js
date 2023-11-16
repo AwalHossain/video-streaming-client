@@ -1,10 +1,10 @@
-import axios from 'axios'
+import axiosInstance from './axiosInstance'
 
 const axiosBaseQuery =
     ({ baseUrl } = { baseUrl: '' }) =>
         async ({ url, method, data, params, headers, contentType }) => {
             try {
-                const result = await axios({
+                const result = await axiosInstance({
                     url: baseUrl + url,
                     method,
                     data,
