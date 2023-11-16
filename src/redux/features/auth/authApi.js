@@ -22,7 +22,7 @@ export const authApi = apiSlice.injectEndpoints(
 
                         dispatch(
                             userLoggedIn({
-                                user: response.data.user
+                                user: response.data.data
                             })
                         )
                     } catch (err) {
@@ -36,6 +36,29 @@ export const authApi = apiSlice.injectEndpoints(
                     method: "POST",
                     // contentType: "application/json",
                     data
+                }),
+                async onQueryStarted(arg, {
+                    queryFulfilled,
+                    dispatch
+                }) {
+                    try {
+                        const response = await queryFulfilled;
+                        console.log(response);
+
+                        dispatch(
+                            userLoggedIn({
+                                user: response.data.data
+                            })
+                        )
+                    } catch (err) {
+
+                    }
+                }
+            }),
+            googleLogin: builder.query({
+                query: () => ({
+                    url: "/auth/google/callback",
+                    method: "GET",
                 }),
                 async onQueryStarted(arg, {
                     queryFulfilled,
@@ -66,18 +89,41 @@ export const authApi = apiSlice.injectEndpoints(
                 }) {
                     try {
                         const response = await queryFulfilled;
-                        console.log(response);
+                        console.log(response.data?.data, 'checkSession');
 
                         dispatch(
                             userLoggedIn({
-                                user: response.data.user
+                                user: response?.data?.data
                             })
                         )
                     } catch (err) {
 
                     }
                 }
-            })
+            }),
+            logout: builder.mutation({
+                query: () => ({
+                    url: "/auth/logout",
+                    method: "GET",
+                }),
+                async onQueryStarted(arg, {
+                    queryFulfilled,
+                    dispatch
+                }) {
+                    try {
+                        const response = await queryFulfilled;
+                        console.log(response);
+
+                        dispatch(
+                            userLoggedIn({
+                                user: null
+                            })
+                        )
+                    } catch (err) {
+
+                    }
+                }
+            }),
         })
     }
 )
@@ -87,5 +133,7 @@ export const {
     useLoginMutation,
     useRegisterMutation,
     useCheckSessionQuery,
+    useGoogleLoginQuery,
+    useLogoutMutation
 
 } = authApi
