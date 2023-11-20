@@ -1,5 +1,5 @@
 import { apiSlice } from "../api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { userLoggedIn, userLoggedOut } from "./authSlice";
 
 
 export const authApi = apiSlice.injectEndpoints(
@@ -86,7 +86,10 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response.data, 'checkSession');
 
                         dispatch(
-                            userLoggedIn(response?.data)
+                            userLoggedIn({
+                                user: response?.data,
+                                userLoggedIn: response?.data?.name ? true : false
+                            })
                         )
                     } catch (err) {
 
@@ -107,9 +110,7 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn({
-                                user: null
-                            })
+                            userLoggedOut()
                         )
                     } catch (err) {
 
