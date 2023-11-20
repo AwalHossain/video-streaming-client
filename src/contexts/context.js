@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import { io } from 'socket.io-client';
+import React, { createContext, useContext, useState } from 'react';
 
 
 
@@ -15,22 +14,8 @@ export const AppProvider = ({ children }) => {
   const [socket, setSocket] = useState();
   const [loading, setLoading] = useState(true);
 
-  useMemo(() => {
-    const newSocket = io('http://127.0.0.1:5000');
-
-    newSocket.on('connect', () => {
-      setSocket(newSocket);
-      setLoading(false);
-    });
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
-
   return (
-    <AppContext.Provider value={{ socket, progress, setProgress }}>
+    <AppContext.Provider value={{ progress, setProgress }}>
       {children}
     </AppContext.Provider>
   );
