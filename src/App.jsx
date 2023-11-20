@@ -8,20 +8,20 @@ import Router from "./routes";
 import ThemeProvider from "./theme";
 
 // components
+import { useSelector } from "react-redux";
 import ProgressModal from "./components/modal/ProgresModal";
 import ScrollToTop from "./components/scroll-to-top";
-import { useAppContext } from "./contexts/context";
-import useAuth from "./hooks/useAuth";
-import { NOTIFY_EVENTS } from "./utils/constants";
-
+import { useSubscribeToEventsQuery } from "./redux/features/socket/socketApi";
+// Modify your processReducer to handle actions
 const processReducer = (state, action) => {
   switch (action.type) {
     case "SET_PROCESS":
+      const { fileName, name, ...rest } = action.payload;
       return {
         ...state,
-        [action.payload.fileName]: {
-          ...state[action.payload.fileName],
-          [action.payload.name]: action.payload,
+        [fileName]: {
+          ...state[fileName],
+          [name]: { fileName, name, ...rest },
         },
       };
     case "RESET_PROCESS":
@@ -32,92 +32,17 @@ const processReducer = (state, action) => {
 };
 
 export default function App() {
-  const { socket } = useAppContext();
+  useSubscribeToEventsQuery();
   const [wsResponse, setWsResponse] = useState(null);
   // const [process, setProcess] = useState({});
   const [process, dispatch] = useReducer(processReducer, {});
-  const { progress } = useAppContext();
-
+  const data = useSelector((state) => state.socket);
+  // Modify your useEffect to dispatch an action with a type and payload
   useEffect(() => {
-    if (socket) {
-      // console.log("facts", progress);
-      // dispatch({ type: "SET_PROCESS", payload: progress });
+    dispatch({ type: "SET_PROCESS", payload: data.process });
+  }, [data]);
 
-      socket.on("msg", (msg) => {
-        console.log("hello", msg);
-        setWsResponse(
-          `Video ${msg.title} HLS conversion completed as ${msg.originalname}`
-        );
-      });
-
-      socket.on("disconnect", () => {
-        dispatch({ type: "RESET_PROCESS" });
-      });
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
-        console.log("NOTIFY_VIDEO_INITIAL_DB_INFO", data);
-        // setWsResponse(`${data.message}`);
-      });
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED, (data) => {
-        console.log("NOTIFY_VIDEO_UPLOADED", data);
-        setWsResponse(`${data.message}`);
-      });
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSED, (data) => {
-        setWsResponse(`${data.message}`);
-      });
-
-      socket.on(
-        NOTIFY_EVENTS.NOTIFY_EVENTS_VIDEO_BIT_RATE_PROCESSED,
-        (data) => {
-          setWsResponse(`${data.message}`);
-        }
-      );
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PUBLISHED, (data) => {
-        setWsResponse(`${data.message}`);
-      });
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_METADATA_SAVED, (data) => {
-        console.log("NOTIFY_VIDEO_UPLOADED", data);
-        setWsResponse(`${data.message}`);
-      });
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSING, (data) => {
-        console.log("video processing", data);
-        dispatch({ type: "SET_PROCESS", payload: data });
-      });
-
-      socket.on(
-        NOTIFY_EVENTS.NOTIFY_EVENTS_VIDEO_BIT_RATE_PROCESSING,
-        (data) => {
-          console.log("NOTIFY_VIDEO_CONVERTED", data);
-          dispatch({ type: "SET_PROCESS", payload: data });
-        }
-      );
-
-      socket.on(NOTIFY_EVENTS.NOTIFY_AWS_S3_UPLOAD_PROGRESS, (data) => {
-        console.log("NOTIFY_AWS_S3_UPLOAD_PROGRESS", data);
-        dispatch({ type: "SET_PROCESS", payload: data });
-      });
-
-      // unsubscribe from event for preventing memory leaks
-      return () => {
-        socket.off("msg");
-        socket.off("disconnect");
-        socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED);
-        socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_METADATA_SAVED);
-        socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSING);
-        socket.off(NOTIFY_EVENTS.NOTIFY_EVENTS_VIDEO_BIT_RATE_PROCESSING);
-        socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSED);
-        socket.off(NOTIFY_EVENTS.NOTIFY_EVENTS_VIDEO_BIT_RATE_PROCESSED);
-        socket.off(NOTIFY_EVENTS.NOTIFY_AWS_S3_UPLOAD_PROGRESS);
-        socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_PUBLISHED);
-      };
-    }
-  }, [socket, progress]);
-
-  const { user, loading } = useAuth();
+  console.log(process, "process rom app", data.process, "data process");
 
   return (
     <ThemeProvider>
