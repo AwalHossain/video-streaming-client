@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
         }
     }, [user, loading, navigate]);
 
-    if (loading) {
+    if (loading || !user) {
         return <div>Loading...</div>
     }
 
