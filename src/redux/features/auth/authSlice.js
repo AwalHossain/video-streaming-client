@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: {
-        name: 'Guest',
+        name: '',
         email: '',
         picture: ''
 
@@ -16,12 +16,14 @@ const authSlice = createSlice({
         userLoggedIn: (state, action) => {
             console.log('State before userLoggedIn:', state);
             console.log('Action for userLoggedIn:', action);
-            state.user = action.payload
+            state.user = action.payload.user;
+            state.userLoggedIn = action.payload.userLoggedIn;
             console.log('State after userLoggedIn:', state);
         },
         userLoggedOut: (state) => {
             console.log('State before userLoggedOut:', state);
-            state.user = undefined
+            state.user = undefined;
+            state.userLoggedIn = false
             console.log('State after userLoggedOut:', state);
         }
     }
