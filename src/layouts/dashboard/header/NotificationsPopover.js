@@ -1,30 +1,32 @@
-import PropTypes from 'prop-types';
-import { set, sub } from 'date-fns';
-import { noCase } from 'change-case';
 import { faker } from '@faker-js/faker';
-import { useState } from 'react';
+import { noCase } from 'change-case';
+import { set, sub } from 'date-fns';
+import PropTypes from 'prop-types';
+import { useEffect, useMemo, useState } from 'react';
 // @mui
 import {
-  Box,
-  List,
-  Badge,
-  Button,
   Avatar,
-  Tooltip,
+  Badge,
+  Box,
+  Button,
   Divider,
-  Popover,
-  Typography,
   IconButton,
-  ListItemText,
-  ListSubheader,
+  List,
   ListItemAvatar,
   ListItemButton,
+  ListItemText,
+  ListSubheader,
+  Popover,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components
+import { useSelector } from 'react-redux';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import NotificationBar from '../../../utils/NotificationBar';
 
 // ----------------------------------------------------------------------
 
@@ -77,10 +79,32 @@ const NOTIFICATIONS = [
 ];
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const [notifications, setNotifications] = useState([{}]);
 
+  const { wsResponse } = useSelector(state => state.socket);
+
+  console.log('wsResponse', wsResponse);
+  useEffect(() => {
+    if (wsResponse) {
+
+
+      setNotifications((prevNotifications) => [
+        {
+          id: wsResponse.id,
+          title: wsResponse.message,
+          description: wsResponse.message,
+          avatar: null,
+          type: wsResponse.status,
+          createdAt: new Date(),
+          isUnRead: true,
+        },
+        ...prevNotifications
+      ]);
+    }
+  }, [wsResponse]);
+
+  const totalUnRead = useMemo(() => notifications.filter((item) => item.isUnRead).length, [notifications]);
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -102,6 +126,9 @@ export default function NotificationsPopover() {
 
   return (
     <>
+      {
+        wsResponse && <NotificationBar severity="success" sx={{ mt: 3 }} state={wsResponse.message} />
+      }
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
         <Badge badgeContent={totalUnRead} color="error">
           <Iconify icon="eva:bell-fill" />
@@ -240,7 +267,7 @@ function renderContent(notification) {
     <Typography variant="subtitle2">
       {notification.title}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {notification.description ? noCase(notification.description) : ''}
       </Typography>
     </Typography>
   );
