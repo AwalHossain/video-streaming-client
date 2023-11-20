@@ -37,8 +37,16 @@ export default function LoginForm() {
     try {
       const response = await login(data).unwrap()
       console.log(response)
-      handleClick()
+
+      // go to dashboard only if the user is found
+
+      if (response?.data?.name) {
+        handleClick()
+      }
     } catch (err) {
+
+      console.log(err, 'err from login');
+
       if (err.status === 'FETCH_ERROR') {
         setError('Network error. Please check your internet connection and try again.');
       } else {
