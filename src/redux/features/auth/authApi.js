@@ -21,10 +21,13 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn(response?.data)
+                            userLoggedIn({
+                                user: response?.data?.data,
+                                userLoggedIn: response?.data?.data?.name ? true : false
+                            })
                         )
                     } catch (err) {
-
+                        console.log(err, 'err from register');
                     }
                 }
             }),
@@ -44,10 +47,13 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn(response?.data)
+                            userLoggedIn({
+                                user: response?.data?.data,
+                                userLoggedIn: response?.data?.data?.name ? true : false
+                            })
                         )
                     } catch (err) {
-
+                        console.log(err, 'err from register');
                     }
                 }
             }),
@@ -65,7 +71,10 @@ export const authApi = apiSlice.injectEndpoints(
                         console.log(response);
 
                         dispatch(
-                            userLoggedIn(response?.data)
+                            userLoggedIn({
+                                user: response?.data?.data,
+                                userLoggedIn: response?.data?.data?.name ? true : false
+                            })
                         )
                     } catch (err) {
 
@@ -87,8 +96,8 @@ export const authApi = apiSlice.injectEndpoints(
 
                         dispatch(
                             userLoggedIn({
-                                user: response?.data,
-                                userLoggedIn: response?.data?.name ? true : false
+                                user: response?.data?.data,
+                                userLoggedIn: response?.data?.data?.name ? true : false
                             })
                         )
                     } catch (err) {
