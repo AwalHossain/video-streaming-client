@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { noCase } from 'change-case';
 import { set, sub } from 'date-fns';
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 // @mui
 import {
   Avatar,
@@ -23,7 +23,7 @@ import {
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import NotificationBar from '../../../utils/NotificationBar';
@@ -78,11 +78,11 @@ const NOTIFICATIONS = [
   },
 ];
 
-export default function NotificationsPopover() {
+function NotificationsPopover() {
 
   const [notifications, setNotifications] = useState([{}]);
-
-  const { wsResponse } = useSelector(state => state.socket);
+  console.log('wsResponse', "waht causing this");
+  const wsResponse = useSelector(state => state.socket.wsResponse, shallowEqual);
 
   console.log('wsResponse', wsResponse);
   useEffect(() => {
@@ -301,3 +301,7 @@ function renderContent(notification) {
     title,
   };
 }
+
+
+
+export default NotificationsPopover;
