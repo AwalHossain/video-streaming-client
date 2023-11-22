@@ -16,7 +16,7 @@ export default function RegistrationForm() {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState(null)
+    const [msg, setMsg] = useState(null)
     const handleClick = () => {
         navigate('/dashboard', { replace: true });
     };
@@ -36,13 +36,18 @@ export default function RegistrationForm() {
 
         try {
             const response = await register(data).unwrap()
-            console.log(response)
-            handleClick()
+            setMsg(response?.message)
+            if (response?.data?.name) {
+                handleClick()
+            }
+            if (response?.data?.name) {
+                handleClick()
+            }
         } catch (err) {
             if (err.status === 'FETCH_ERROR') {
-                setError('Network error. Please check your internet connection and try again.');
+                setMsg('Network error. Please check your internet connection and try again.');
             } else {
-                setError(err.data?.message || err.message);
+                setMsg(err.data?.message || err.message);
             }
         }
 
@@ -52,7 +57,7 @@ export default function RegistrationForm() {
     return (
         <>
             {
-                error && <NotificationBar severity="error" sx={{ mt: 3 }} state={error} setState={setError} />
+                msg && <NotificationBar severity="error" sx={{ mt: 3 }} state={msg} setState={setMsg} />
 
             }
             <form onSubmit={handleSubmit}>
@@ -95,7 +100,7 @@ export default function RegistrationForm() {
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
                     <Checkbox name="remember" label="Remember me" />
-                    <Link variant="subtitle2" underline="hover">
+                    <Link variant="subtitle2" underline="hover" href='/login'>
                         Already Registered? Login
                     </Link>
                 </Stack>

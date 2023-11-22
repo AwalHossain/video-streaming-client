@@ -15,7 +15,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null)
+  const [msg, setMsg] = useState(null)
 
 
   const handleClick = () => {
@@ -35,33 +35,28 @@ export default function LoginForm() {
     };
 
     try {
-      const response = await login(data).unwrap()
-      console.log(response)
-
-      // go to dashboard only if the user is found
-
+      const response = await login(data).unwrap();
+      console.log(response, 'response from login');
+      setMsg(response?.message)
       if (response?.data?.name) {
         handleClick()
       }
     } catch (err) {
-
-      console.log(err, 'err from login');
+      console.log(err, 'err from login', loginErr);
 
       if (err.status === 'FETCH_ERROR') {
-        setError('Network error. Please check your internet connection and try again.');
+        setMsg('Network error. Please check your internet connection and try again.');
       } else {
-        setError(err.data?.message || err.message);
+        setMsg(err.data?.message || err.message || loginErr.message);
       }
     }
 
-  }
-
-  console.log(error, 'error');
+  };
 
   return (
     <>
       {
-        error && <NotificationBar severity="error" sx={{ mt: 3 }} state={error} setState={setError} />
+        msg && <NotificationBar severity="error" sx={{ mt: 3 }} state={msg} setState={setMsg} />
 
       }
       <form onSubmit={handleSubmit}>
