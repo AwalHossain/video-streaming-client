@@ -1,10 +1,11 @@
-import axiosInstance from './axiosInstance'
+import axios from 'axios';
 
 const axiosBaseQuery =
     ({ baseUrl } = { baseUrl: '' }) =>
-        async ({ url, method, data, params, headers, contentType }) => {
+        async ({ url, method, data, params, headers, contentType, fileName }) => {
+
             try {
-                const result = await axiosInstance({
+                const result = await axios({
                     url: baseUrl + url,
                     method,
                     data,
@@ -12,16 +13,15 @@ const axiosBaseQuery =
                     headers: {
                         "Content-Type": contentType || "application/json",
                     },
-                    withCredentials: 'include'
+                    withCredentials: 'include',
                 })
                 return { data: result.data }
             } catch (axiosError) {
+                console.log(axiosError, 'err from axiosBaseQuery');
                 const err = axiosError
                 return {
-                    error: {
-                        status: err.response?.status,
-                        data: err.response?.data || err.message,
-                    },
+                    status: err.response?.status,
+                    data: err.response?.data || err.message,
                 }
             }
         }
