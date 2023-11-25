@@ -4,7 +4,6 @@ import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography 
 import { alpha } from '@mui/material/styles';
 // mocks_
 import { useNavigate } from 'react-router-dom';
-import account from '../../../_mock/account';
 import { useLogoutMutation } from '../../../redux/features/auth/authApi';
 // ----------------------------------------------------------------------
 
@@ -25,7 +24,7 @@ const MENU_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+export default function AccountPopover({ user }) {
   const [open, setOpen] = useState(null);
   const navigate = useNavigate();
 
@@ -93,10 +92,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user.email}
           </Typography>
         </Box>
 
