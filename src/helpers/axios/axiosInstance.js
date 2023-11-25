@@ -32,37 +32,31 @@ axiosInstance.interceptors.response.use(
         // Do something with response data
         if (response.data) {
             return {
-                data: response.data?.data,
+                data: response.data,
             }
         } else {
             // if there is no data in the response, return the response
 
             return {
-                error: {
-                    statusCode: response.status,
-                    message: "Invali response format",
-                }
+
+                statusCode: response.status,
+                message: "Invali response format",
             }
         }
     },
 
     function (error) {
+        console.log(error, 'err from axiosInstance');
         if (error.response && error.response.data) {
-            const responseObject = {
-                error: {
-                    statusCode: error.response.status,
-                    message: error.response.data.message || "Soemthing went wrong",
-                }
-            }
 
-            return responseObject;
+            console.log(error, 'from axiosInstance');
+
+            return error.response.data;
         } else {
             // handle other errors
             return {
-                error: {
-                    statusCode: 500,
-                    message: "Something went wrong",
-                }
+                statusCode: 500,
+                message: "Something went wrong",
             }
         }
     }
