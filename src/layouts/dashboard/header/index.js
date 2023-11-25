@@ -7,6 +7,7 @@ import { bgBlur } from '../../../utils/cssStyles';
 // components
 import Iconify from '../../../components/iconify';
 //
+import React from 'react';
 import { useSelector } from 'react-redux';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
@@ -43,10 +44,9 @@ Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
 
-export default function Header({ onOpenNav }) {
+function Header({ onOpenNav }) {
   // const { user, loading } = useAuth();
   const { user } = useSelector(state => state.auth);
-
   console.log('user header index', user);
   return (
     <StyledRoot>
@@ -78,7 +78,7 @@ export default function Header({ onOpenNav }) {
           {
             user && user?.name &&
             <Box>
-              <AccountPopover />
+              <AccountPopover user={user} />
             </Box>
           }
         </Stack>
@@ -86,3 +86,6 @@ export default function Header({ onOpenNav }) {
     </StyledRoot>
   );
 }
+
+
+export default React.memo(Header);
