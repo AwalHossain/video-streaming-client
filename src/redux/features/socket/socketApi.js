@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { NOTIFY_EVENTS } from "../../../utils/constants";
 import { apiSlice } from "../api/apiSlice";
+import { setVideoData } from "../video/videoSlice";
 import { resetProcess, setProcess, setWsResponse } from "./socketSlice";
 
 
@@ -34,6 +35,9 @@ export const socketApi = apiSlice.injectEndpoints({
                     dispatch(
                         setWsResponse(data)
                     )
+                    dispatch(
+                        setVideoData(data.data)
+                    )
                 });
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED, (data) => {
@@ -65,14 +69,12 @@ export const socketApi = apiSlice.injectEndpoints({
                 });
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_METADATA_SAVED, (data) => {
-                    console.log("NOTIFY_VIDEO_UPLOADED", data);
                     dispatch(
                         setWsResponse(data)
                     )
                 });
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSING, (data) => {
-                    console.log("video processing", data);
                     dispatch(
                         setProcess(data)
                     );
@@ -81,7 +83,6 @@ export const socketApi = apiSlice.injectEndpoints({
                 socket.on(
                     NOTIFY_EVENTS.NOTIFY_EVENTS_VIDEO_BIT_RATE_PROCESSING,
                     (data) => {
-                        console.log("NOTIFY_VIDEO_CONVERTED", data);
                         dispatch(
                             setProcess(data)
                         );
@@ -97,7 +98,7 @@ export const socketApi = apiSlice.injectEndpoints({
 
                 // unsubscribe from event for preventing memory leaks
                 return () => {
-                    socket.off("msg");
+                    socket.off("connect");
                     socket.off("disconnect");
                     socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED);
                     socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_METADATA_SAVED);
