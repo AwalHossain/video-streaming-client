@@ -11,11 +11,9 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { useFormik } from 'formik';
-import Lottie from "lottie-react";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import VideoForm from './VideoForm';
-import rocket from './rocket.json';
 
 
 import {
@@ -23,8 +21,8 @@ import {
     PictureInPicture as ImageIcon,
     VideoLibrary as VideoLibraryIcon
 } from '@mui/icons-material';
-import axios from 'axios';
-import { useAppContext } from '../contexts/context';
+import { useSelector } from 'react-redux';
+import { useUpload } from '../components/upload/handleUplodadProgress';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -99,13 +97,18 @@ const validationSchema = yup.object({
 });
 
 
-export const UploadModal = ({ open, onClose }) => {
-    const [uploading, setUploading] = useState(false); // State to track if upload is in progress
+export const UploadModal = React.memo(({ open, onClose }) => {
+    // const [uploading, setUploading] = useState(false); // State to track if upload is in progress
+    const InitalMetaData = useSelector(state => state.video.setInitalMetaData);
     const [showForm, setShowForm] = useState(false);
-    const [data, setData] = useState(null); // State to track data to be sent to the server
-    const { setProgress } = useAppContext();
-    // Inside your component
+    const { upload, uploading, data } = useUpload();
 
+    useEffect(() => {
+        if (InitalMetaData?.name === 'notify_video_metadata_saved') {
+            setShowForm(true);
+            onClose();
+        }
+    }, [InitalMetaData, onClose]);
 
     const formik = useFormik({
         initialValues: {
@@ -114,46 +117,19 @@ export const UploadModal = ({ open, onClose }) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            const data = await axios.post('http://localhost:5000/api/v1/videos/upload', values, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: (progressEvent) => {
-                    setUploading(true);
-
-                    const { loaded, total } = progressEvent;
-                    const percent = Math.floor((loaded * 100) / total);
-                    setProgress({
-                        status: 'processing',
-                        name: "Video Upload",
-                        fileName: values.video.name,
-                        progress: percent,
-                    });
-                }
-            }).then((res) => {
-                setData(res.data);
-                setProgress({
-                    status: 'completed',
-                    name: "Video Upload",
-                    fileName: values.video.name,
-                    progress: 100,
-                });
-                // setUploading(false);
-            }).catch((err) => {
-                console.log(err);
-            });
+            const data = await upload(values);
+            console.log(data, 'sumit oa di');
         },
     });
 
     const handleAnimationComplete = () => {
         onClose();
-        setShowForm(true);
         console.log('Animation completed');
     }
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
 
+    console.log('rendering upload modal checking');
     return (
         <>
             <Modal open={open}>
@@ -177,103 +153,84 @@ export const UploadModal = ({ open, onClose }) => {
                             marginTop: '20px',
                         }}
                     >
-                        {uploading ? (
-                            <div>
-                                {/* Display rocket animation or loading indicator here */}
-                                <Typography variant="body2" component="div">
-                                    <div style={{ height: 300, width: 300 }}>
-                                        Uploading...
-                                        <Lottie
-                                            animationData={rocket}
-                                            onAnimationEnd={() => console.log('Animation End!')}
-                                            onComplete={handleAnimationComplete}
-                                            loop={false} // Set to true for the animation to rep
-                                            speed={2.5} // Set the speed of the animation
-                                            segments={[0, 20]} // Set the start and end frames of the animation
-                                        />
-                                    </div> {/* Replace with your animation component */}
-                                </Typography>
-                            </div>
-                        ) : (
-                            <div>
-                                <form onSubmit={formik.handleSubmit}>
-                                    <Grid container spacing={5} marginY={5}>
+                        <div>
+                            <form onSubmit={formik.handleSubmit}>
+                                <Grid container spacing={5} marginY={5}>
 
-                                        <Grid item xs={12} sm={12}>
-                                            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                                    Upload Video
-                                                    <VisuallyHiddenInput
-                                                        name='video'
-                                                        accept='video/*,video/x-matroska'
-                                                        id='video'
-                                                        type='file'
-                                                        onChange={(e) => {
-                                                            const file = e.currentTarget.files[0];
-                                                            formik.setFieldValue('video', file);
-                                                            setSelectedVideo(file.name);
-                                                        }}
-                                                    />
-                                                </Button>
-                                                {
-                                                    formik.touched.video && formik.errors.video ? (
-                                                        <Typography variant="body2" component="div" sx={{ color: 'red' }}>
-                                                            {formik.errors.video}
-                                                        </Typography>
-                                                    ) : null
-                                                }
-                                                {selectedVideo && <Box display="flex" alignItems="center">
-                                                    <VideoLibraryIcon />
-                                                    <Typography>{selectedVideo}</Typography>
-                                                </Box>} {/* Display the file name */}
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item xs={12} sm={12}>
-                                            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                                    Upload WaterMark Image
-                                                    <VisuallyHiddenInput
-                                                        name='image'
-                                                        accept='image/*'
-                                                        id='image'
-                                                        type='file'
-                                                        onChange={(e) => {
-                                                            const file = e.currentTarget.files[0];
-                                                            formik.setFieldValue('image', file);
-                                                            setSelectedImage(file.name);
-                                                        }}
-                                                    />
-                                                </Button>
-                                                {/* formik err */}
-                                                {
-                                                    formik.touched.image && formik.errors.image ? (
-                                                        <Typography variant="body2" component="div" sx={{ color: 'red' }}>
-                                                            {formik.errors.image}
-                                                        </Typography>
-                                                    ) : null
-                                                }
-                                                {selectedImage && <Box display="flex" alignItems="center">
-                                                    <ImageIcon />
-                                                    <Typography>{selectedImage}</Typography>
-                                                </Box>} {/* Display the file name */}
-
-                                            </FormControl>
-                                            <Button type="submit" variant="contained" color="primary" style={{
-                                                margin: '20px 0',
-                                            }} sx={{ m: 1 }}
-                                                disabled={formik.isSubmitting || !formik.values.video}
-                                            >
-                                                Submit
+                                    <Grid item xs={12} sm={12}>
+                                        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                Upload Video
+                                                <VisuallyHiddenInput
+                                                    name='video'
+                                                    accept='video/*,video/x-matroska'
+                                                    id='video'
+                                                    type='file'
+                                                    onChange={(e) => {
+                                                        const file = e.currentTarget.files[0];
+                                                        formik.setFieldValue('video', file);
+                                                        setSelectedVideo(file.name);
+                                                    }}
+                                                />
                                             </Button>
-                                        </Grid>
-
-
+                                            {
+                                                formik.touched.video && formik.errors.video ? (
+                                                    <Typography variant="body2" component="div" sx={{ color: 'red' }}>
+                                                        {formik.errors.video}
+                                                    </Typography>
+                                                ) : null
+                                            }
+                                            {selectedVideo && <Box display="flex" alignItems="center">
+                                                <VideoLibraryIcon />
+                                                <Typography>{selectedVideo}</Typography>
+                                            </Box>} {/* Display the file name */}
+                                        </FormControl>
                                     </Grid>
 
-                                </form>
-                            </div>
-                        )}
+                                    <Grid item xs={12} sm={12}>
+                                        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                                Upload WaterMark Image
+                                                <VisuallyHiddenInput
+                                                    name='image'
+                                                    accept='image/*'
+                                                    id='image'
+                                                    type='file'
+                                                    onChange={(e) => {
+                                                        const file = e.currentTarget.files[0];
+                                                        formik.setFieldValue('image', file);
+                                                        setSelectedImage(file.name);
+                                                    }}
+                                                />
+                                            </Button>
+                                            {/* formik err */}
+                                            {
+                                                formik.touched.image && formik.errors.image ? (
+                                                    <Typography variant="body2" component="div" sx={{ color: 'red' }}>
+                                                        {formik.errors.image}
+                                                    </Typography>
+                                                ) : null
+                                            }
+                                            {selectedImage && <Box display="flex" alignItems="center">
+                                                <ImageIcon />
+                                                <Typography>{selectedImage}</Typography>
+                                            </Box>} {/* Display the file name */}
+
+                                        </FormControl>
+                                        <Button type="submit" variant="contained" color="primary" style={{
+                                            margin: '20px 0',
+                                        }} sx={{ m: 1 }}
+                                            disabled={formik.isSubmitting || !formik.values.video}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Grid>
+
+
+                                </Grid>
+
+                            </form>
+                        </div>
 
                     </div>
                     <Typography variant="body2" component="p">
@@ -309,8 +266,29 @@ export const UploadModal = ({ open, onClose }) => {
                 </UploadModalContainer>
             </Modal>
             {
-                showForm && <VideoForm data={data?.data} />
+                showForm && <VideoForm data={InitalMetaData?.data} />
             }
         </>
     );
-};
+});
+
+// {
+//     uploading ? (
+//         <div>
+//             {/* Display rocket animation or loading indicator here */}
+//             <Typography variant="body2" component="div">
+//                 <div style={{ height: 300, width: 300 }}>
+//                     Uploading...
+//                     <Lottie
+//                         animationData={rocket}
+//                         onAnimationEnd={() => console.log('Animation End!')}
+//                         onComplete={handleAnimationComplete}
+//                         loop={false} // Set to true for the animation to rep
+//                         speed={2.5} // Set the speed of the animation
+//                         segments={[0, 20]} // Set the start and end frames of the animation
+//                     />
+//                 </div> {/* Replace with your animation component */}
+//             </Typography>
+//         </div>
+//     ) : (
+
