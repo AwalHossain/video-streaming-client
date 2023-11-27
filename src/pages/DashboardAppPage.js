@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles';
 
 export default function DashboardAppPage() {
   const theme = useTheme();
-
+  console.log('checking re-rendering[DashboardAppPage]');
   return (
     <>
       <Helmet>
