@@ -7,7 +7,10 @@ import { progressEmitter } from '../components/upload/handleUplodadProgress';
 import { useSubscribeToEventsQuery } from '../redux/features/socket/socketApi';
 
 
-const ProgressContext = createContext()
+const ProgressContext = createContext({
+    process: {},
+    dispatch: () => { }
+});
 
 const processReducer = (state, action) => {
     switch (action.type) {
@@ -22,7 +25,8 @@ const processReducer = (state, action) => {
                 },
             };
         case "RESET_PROCESS":
-            return {};
+            return {
+            };
         default:
             return state;
     }
@@ -31,7 +35,7 @@ const processReducer = (state, action) => {
 export const ProgressProvider = ({ children }) => {
     useSubscribeToEventsQuery();
     const [process, dispatch] = useReducer(processReducer, {});
-    const { process: dataProcess } = useSelector((state) => state.socket);
+    const dataProcess = useSelector((state) => state.socket.process);
     const [uploadProgress, setUploadProgress] = useState(null);
 
     useEffect(() => {
@@ -46,7 +50,6 @@ export const ProgressProvider = ({ children }) => {
         }
 
     }, [])
-    console.log(uploadProgress, 'uploadProgress');
 
     // Modify your useEffect to dispatch an action with a type and payload
     useEffect(() => {
@@ -56,6 +59,11 @@ export const ProgressProvider = ({ children }) => {
         if (dataProcess) {
             dispatch({ type: "SET_PROCESS", payload: dataProcess });
         }
+
+        if (!dataProcess || !uploadProgress) {
+            dispatch({ type: "RESET_PROCESS", payload: {} });
+        }
+
     }, [dataProcess, uploadProgress]);
 
     return (
