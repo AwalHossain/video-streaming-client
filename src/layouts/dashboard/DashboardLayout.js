@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -35,11 +35,19 @@ const Main = styled('div')(({ theme }) => ({
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
 
+  const handleOpenNav = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleCloseNav = useCallback(() => {
+    setOpen(false);
+  }, []);
+
   return (
     <StyledRoot>
-      <Header onOpenNav={() => setOpen(true)} />
+      <Header onOpenNav={handleOpenNav} />
 
-      <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+      <Nav openNav={open} onCloseNav={handleCloseNav} />
 
       <Main>
         <Outlet />
