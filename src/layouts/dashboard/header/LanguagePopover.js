@@ -1,7 +1,7 @@
 import { useState } from 'react';
 // @mui
+import { Box, IconButton, MenuItem, Popover, Stack } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { Box, MenuItem, Stack, IconButton, Popover } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +35,8 @@ export default function LanguagePopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  console.log('LanguagePopover', 'LanguagePopover');
 
   return (
     <>
