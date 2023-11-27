@@ -18,7 +18,7 @@ import StepTwo from '../components/upload/StepTwoForm';
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useAppContext } from '../contexts/context';
+import { useGetVideoMetaDataQuery } from '../redux/features/video/videoApi';
 
 
 
@@ -66,27 +66,14 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 
 
 
-const VideoForm = () => {
+const VideoForm = ({ data }) => {
+    // const {} = data;
+    console.log(data, 'data from videoForm');
     const [open, setOpen] = useState(true);
-    const [videoData, setVideoData] = useState(null);
-    const { socket } = useAppContext();
+    // const [videoData, setVideoData] = useState(null);
 
-    // React.useEffect(() => {
-    //     const handleVideoInfo = (data) => {
-    //         setVideoData(data);
-    //         console.log(data, 'getting from socket');
-    //     };
-
-    //     socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
-    //         console.log(data, 'getting from socket');
-    //     });
-
-    //     // Clean up the event listener when the component unmounts
-    //     return () => {
-    //         socket.off(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, handleVideoInfo);
-    //     };
-    // }, [socket]);
-
+    const { isLoading, data: videoData, } = useGetVideoMetaDataQuery(data?.id)
+    console.log(videoData, 'data from useGetVideoMetaDataQuery');
     const handleClose = () => {
         setOpen(false);
     };
@@ -109,14 +96,6 @@ const VideoForm = () => {
             console.log(values);
         },
     });
-
-    // React.useEffect(() => {
-    //     formik.setValues({
-    //         ...formik.values,
-    //         title: data?.originalName,
-    //     });
-
-    // }, [data, formik]);
 
     const [step, setStep] = useState(1);
     const steps = ['Video Details', 'Visibility and Publish'];
