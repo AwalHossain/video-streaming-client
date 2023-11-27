@@ -45,14 +45,20 @@ export const useUpload = () => {
             setData(response.data);
             setUploading(false);
             throttledEmitProgress({
-                status: 'processing',
+                status: 'completed',
                 name: "Video Upload",
                 fileName: values.video.name,
                 progress: 100,
             });
             return response.data;
         } catch (error) {
-            console.error(error);
+            throttledEmitProgress({
+                status: 'completed',
+                name: "Video Upload",
+                fileName: values.video.name,
+                progress: 100,
+            });
+            console.error(error, 'chekcing axio');
         }
     }
 
