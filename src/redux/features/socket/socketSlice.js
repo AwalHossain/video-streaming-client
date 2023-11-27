@@ -25,7 +25,7 @@ const socketSlice = createSlice({
 
         },
         resetProcess: (state, action) => {
-            state.process = {
+            state.resetProcess = {
                 "action.type": "RESET_PROCESS"
             }
         }
