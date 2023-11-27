@@ -304,4 +304,4 @@ function renderContent(notification) {
 
 
 
-export default NotificationsPopover;
+export default React.memo(NotificationsPopover);
