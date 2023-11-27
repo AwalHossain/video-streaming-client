@@ -1,9 +1,12 @@
 import { Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { useProgress } from '../../contexts/ProgressContext';
 import ProgressModal from './ProgresModal';
 
 const ProgressModals = () => {
     const { process } = useProgress();
+    const isConnected = useSelector(state => state.socket.resetProcess);
+    console.log(isConnected, 'isConnected');
     return (
         <Stack
             direction="column"
@@ -20,7 +23,7 @@ const ProgressModals = () => {
             {Object.entries(process).map(([videoId, videoProcess]) =>
                 Object.entries(videoProcess).map(
                     ([name, process]) =>
-                        process.status === "processing" && (
+                        (process.status === "processing" && !isConnected) && (
                             <ProgressModal
                                 key={`${videoId}-${name}`}
                                 name={name}
