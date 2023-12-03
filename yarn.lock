@@ -2628,6 +2628,13 @@
     "@typescript-eslint/types" "5.40.0"
     eslint-visitor-keys "^3.3.0"
 
+"@vidstack/react@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@vidstack/react/-/react-1.8.1.tgz#821ac8cd0ccd5fd98fd7e3a4baf1ad9aa76e2408"
+  integrity sha512-wq5Zzl7V7l07NzdYvXe+XgTuoJ45d8p87PrJDzOjf+6VFdsGwJF58ZoBnnEzwnmftTQ3I5ZoOnyUxdjnSCVB0Q==
+  dependencies:
+    media-captions "^1.0.1"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.11.1.tgz"
@@ -5279,6 +5286,11 @@ history@^5.3.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
+hls.js@^1.4.12:
+  version "1.4.12"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.4.12.tgz#2022daa29d10c662387d80a5297f8330f8ef5ee2"
+  integrity sha512-1RBpx2VihibzE3WE9kGoVCtrhhDWTzydzElk/kyRbEOLnb1WIE+3ZabM/L8BqKFTCL3pUy4QzhXgD1Q6Igr1JA==
+
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
@@ -6646,6 +6658,11 @@ mdn-data@2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/mdn-data/-/mdn-data-2.0.4.tgz"
   integrity sha512-iV3XNKw06j5Q7mi6h+9vbx23Tv7JkjEVgKHW4pimwyDGWm0OIQntJJ+u1C6mg6mK1EaTv42XQ7w76yuzH7M2cA==
+
+media-captions@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/media-captions/-/media-captions-1.0.2.tgz#90a6595c3de0859308e996d8b151a1f3bab9e242"
+  integrity sha512-QxAFc+XTGZeMx+ZvLtMxEDgAjd0kr1LJ2NekLr1cw/UKENOxK7B9g6HwtuTQzCXxmb4Dknd4T8M7FOqqCK9buA==
 
 media-typer@0.3.0:
   version "0.3.0"
