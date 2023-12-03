@@ -99,12 +99,12 @@ const validationSchema = yup.object({
 
 export const UploadModal = React.memo(({ open, onClose }) => {
     // const [uploading, setUploading] = useState(false); // State to track if upload is in progress
-    const InitalMetaData = useSelector(state => state.video.setInitalMetaData);
+    const InitalMetaData = useSelector(state => state.videoData.videoMetadata);
     const [showForm, setShowForm] = useState(false);
     const { upload, uploading, data } = useUpload();
 
     useEffect(() => {
-        if (InitalMetaData?.name === 'notify_video_metadata_saved') {
+        if (InitalMetaData?.originalName) {
             setShowForm(true);
             onClose();
         }
@@ -253,20 +253,10 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                         </a>
                         .
                     </Typography>
-                    <Typography variant="body2" component="p">
-                        Please be sure not to violate others' copyright or privacy rights.{' '}
-                        <a
-                            href="https://www.youtube.com/yt/copyright"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Learn more
-                        </a>
-                    </Typography>
                 </UploadModalContainer>
             </Modal>
             {
-                showForm && <VideoForm data={InitalMetaData?.data} />
+                showForm && <VideoForm data={InitalMetaData} />
             }
         </>
     );
