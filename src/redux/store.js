@@ -9,7 +9,7 @@ export const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         auth: authSliceReducer,
         socket: socketSliceReducer,
-        video: videoSliceReducer,
+        videoData: videoSliceReducer,
 
     },
     // adding api middleware enables caching, invalidation, polling, and other features of `rtk-query`
