@@ -4,7 +4,7 @@ const StepOne = ({ formik }) => {
     console.log('title');
     return (
         <>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
                 <TextField
                     label="Video file name"
                     value={formik.values.videoFile?.name}
@@ -19,8 +19,8 @@ const StepOne = ({ formik }) => {
                         </div>
                     )
                 }
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Grid> */}
+            <Grid item xs={12}>
                 <TextField
                     id="title"
                     name="title"

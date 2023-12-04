@@ -23,7 +23,7 @@ const StepTwo = ({ formik }) => (
                 </Select>
             </FormControl>
         </Grid>
-        <Grid item xs={12} md={6} spacing={5}>
+        {/* <Grid item xs={12} md={6} spacing={5}>
             <TextField
                 id="thumbnailUrl"
                 name="thumbnailUrl"
@@ -39,7 +39,7 @@ const StepTwo = ({ formik }) => (
                 }
                 fullWidth
             />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} md={6} spacing={5}>
             <FormControl fullWidth>
                 <InputLabel id="language-select-label">Language</InputLabel>
