@@ -4,6 +4,7 @@ import DashboardLayout from "./layouts/dashboard";
 import SimpleLayout from "./layouts/simple";
 //
 import ProtectedRoute from "./components/ProtectedRoute";
+import PageLayout from "./layouts/page/PageLayout";
 import BlogPage from "./pages/BlogPage";
 import DashboardAppPage from "./pages/DashboardAppPage";
 import LoginPage from "./pages/LoginPage";
@@ -28,7 +29,6 @@ export default function Router() {
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
         { path: "video-upload", element: <VideoUploadPage /> },
-        { path: "video-player", element: <VideoPlayerPage /> },
       ],
     },
     {
@@ -46,6 +46,16 @@ export default function Router() {
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" /> },
       ],
+    },
+    {
+      element: <PageLayout />,
+      children: [
+        { element: <Navigate to="/dashboard/app" />, index: true },
+        {
+          path: "/watch/:videoId",
+          element: <VideoPlayerPage />
+        },
+      ]
     },
     {
       path: "*",
