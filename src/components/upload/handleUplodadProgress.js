@@ -19,7 +19,7 @@ export const useUpload = () => {
 
         const throttledEmitProgress = _.throttle((progress) => {
             progressEmitter.emit('progress', progress);
-        }, 3000);
+        }, 5000);
 
         const config = {
             headers: {
