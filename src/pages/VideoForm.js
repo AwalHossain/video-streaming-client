@@ -17,8 +17,11 @@ import StepTwo from '../components/upload/StepTwoForm';
 
 import { LoadingButton } from '@mui/lab';
 import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useGetVideoMetaDataQuery } from '../redux/features/video/videoApi';
+import { useUpdateVideoMetaDataMutation } from '../redux/features/video/videoApi';
+import { resetVideoMetaData } from '../redux/features/video/videoSlice';
 
 
 
@@ -26,7 +29,7 @@ const validationSchema = yup.object({
     title: yup.string().required('Title is required'),
     description: yup.string().required('Description is required'),
     visibility: yup.string().required('Visibility is required'),
-    thumbnailUrl: yup.string().required('Thumbnail URL is required'),
+    // thumbnailUrl: yup.string().required('Thumbnail URL is required'),
     language: yup.string().required('Language is required'),
     recordingDate: yup.date().required('Recording date is required'),
     category: yup.string().required('Category is required'),
@@ -67,33 +70,43 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 
 
 const VideoForm = ({ data }) => {
-    // const {} = data;
     console.log(data, 'data from videoForm');
     const [open, setOpen] = useState(true);
-    // const [videoData, setVideoData] = useState(null);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const { isLoading, data: videoData, } = useGetVideoMetaDataQuery(data?.id)
-    console.log(videoData, 'data from useGetVideoMetaDataQuery');
+    const [updateVideoMetaData, { data: videUpdateData, isLoading }] = useUpdateVideoMetaDataMutation();
+    console.log(videUpdateData, 'data from useGetVideoMetaDataQuery');
     const handleClose = () => {
+        dispatch(resetVideoMetaData())
         setOpen(false);
     };
-    console.log(videoData?.originalName, 'videData');
+    console.log(data?.originalName, 'videData');
     const formik = useFormik({
         initialValues: {
-            title: videoData?.originalName || '',
+            title: data?.title || '',
             description: '',
-            visibility: 'public',
-            thumbnailUrl: '',
-            language: 'English',
-            recordingDate: new Date(),
-            category: 'Education',
+            visibility: data?.visibility || '',
+            // thumbnailUrl: '',
+            language: data?.language || '',
+            recordingDate: data?.recordingDate || "",
+            category: data?.category || '',
             videoFile: null,
         },
         // enableReinitialize: true,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            // await postToServer(values);
+            console.log(values, 'data from updateVideoMetaData', data?._id);
             console.log(values);
+            const updateData = await updateVideoMetaData({
+                id: data?._id,
+                ...values,
+            }).unwrap();
+            console.log(updateData);
+            if (updateData?.status === 'success') {
+                handleClose();
+                navigate(`/`);
+            }
         },
     });
 
@@ -152,7 +165,7 @@ const VideoForm = ({ data }) => {
                                     size='large'
                                     type='submit'
                                     variant='contained'
-                                    disabled={formik.isSubmitting || !formik.isValid}
+                                    disabled={formik.isSubmitting || !formik.isValid || isLoading}
                                 >
                                     Upload
                                 </LoadingButton>
@@ -171,6 +184,7 @@ const VideoForm = ({ data }) => {
                             </Button>
                         </div>
                     </form>
+
                 </UploadModalContainer>
             </Modal>
         </>
