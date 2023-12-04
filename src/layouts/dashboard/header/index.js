@@ -9,8 +9,8 @@ import Iconify from '../../../components/iconify';
 //
 import React from 'react';
 import { useSelector } from 'react-redux';
+import Logo from '../../../components/logo';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
 import Searchbar from './Searchbar';
 
@@ -25,9 +25,10 @@ const HEADER_DESKTOP = 92;
 const StyledRoot = styled(AppBar)(({ theme }) => ({
   ...bgBlur({ color: theme.palette.background.default }),
   boxShadow: 'none',
-  [theme.breakpoints.up('lg')]: {
-    width: `calc(100% - ${NAV_WIDTH + 1}px)`,
-  },
+  // [theme.breakpoints.up('lg')]: {
+  //   width: `calc(100% - ${NAV_WIDTH + 1}px)`,
+  // },
+  zIndex: theme.zIndex.drawer + 100,
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -51,18 +52,9 @@ function Header({ onOpenNav }) {
   return (
     <StyledRoot>
       <StyledToolbar>
-        <IconButton
-          onClick={onOpenNav}
-          sx={{
-            mr: 1,
-            color: 'text.primary',
-            display: { lg: 'none' },
-          }}
-        >
-          <Iconify icon="eva:menu-2-fill" />
-        </IconButton>
+        <Logo />
 
-        <Searchbar />
+
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack
@@ -73,14 +65,19 @@ function Header({ onOpenNav }) {
             sm: 1,
           }}
         >
-          <LanguagePopover />
+          <Searchbar />
           <NotificationsPopover />
-          {
-            user && user?.name &&
-            <Box>
-              <AccountPopover user={user} />
-            </Box>
-          }
+          <AccountPopover user={user} />
+          <IconButton
+            onClick={onOpenNav}
+            sx={{
+              mr: 1,
+              color: 'text.primary',
+              display: { lg: 'none' },
+            }}
+          >
+            <Iconify icon="eva:menu-2-fill" />
+          </IconButton>
         </Stack>
       </StyledToolbar>
     </StyledRoot>
