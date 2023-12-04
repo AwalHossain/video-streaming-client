@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    id: '',
-    name: '',
-    title: '',
-    description: '',
-    visibility: '',
-    thumbnailUrl: '',
-    language: '',
-    recordingDate: new Date(),
-    category: '',
-    videoFile: '',
+    videoMetadata: {
+        visibility: '',
+        thumbnailUrl: '',
+        language: '',
+        recordingDate: new Date().toISOString().split('T')[0],
+        category: '',
+        videoFile: '',
+    },
+    videos: [],
+    video: {},
 }
 
 
@@ -18,31 +18,28 @@ export const videoSlice = createSlice({
     name: 'video',
     initialState,
     reducers: {
-        setVideoData: (state, action) => {
-            state.id = action.payload._id;
-            state.title = action.payload.title;
-            state.name = action.payload.name;
-            state.description = action.payload.description;
-            state.visibility = action.payload.visibility;
-            state.language = action.payload.language;
-            state.recordingDate = action.payload.recordingDate;
-            state.category = action.payload.category;
+        setVideoMetaData: (state, action) => {
+            console.log(action.payload, 'action.payload from videoSlice');
+            state.videoMetadata = action.payload;
+
         },
         resetVideoData: (state) => {
-            state.id = '';
-            state.title = '';
-            state.description = '';
-            state.visibility = '';
-            state.thumbnailUrl = '';
-            state.language = '';
-            state.recordingDate = new Date();
-            state.category = '';
-            state.videoFile = '';
+            state.videoMetadata = initialState.videoMetadata;
+        },
+        setVideoData: (state, action) => {
+            state
+                .state.videos = action.payload;
+        },
+        resetVideoMetaData: (state) => {
+            state.videoMetadata = initialState.videoMetadata;
+        },
+        setSingleVideo: (state, action) => {
+            state.video = action.payload;
         },
     },
 });
 
 
-export const { setVideoData, resetVideoData } = videoSlice.actions;
+export const { setVideoMetaData, resetVideoData, setVideoData, resetVideoMetaData, setSingleVideo } = videoSlice.actions;
 
 export default videoSlice.reducer;
