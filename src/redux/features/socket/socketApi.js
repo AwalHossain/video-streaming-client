@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { NOTIFY_EVENTS } from "../../../utils/constants";
 import { apiSlice } from "../api/apiSlice";
-import { setVideoData } from "../video/videoSlice";
+import { setVideoMetaData } from "../video/videoSlice";
 import { resetProcess, setProcess, setWsResponse } from "./socketSlice";
 
 
@@ -18,7 +18,9 @@ export const socketApi = apiSlice.injectEndpoints({
                 cacheDataLoaded,
                 cacheEntryRemoved
             }) {
-                const socket = io("http://localhost:5000");
+                const socket = io(process.env.REACT_APP_BASE_URL, {
+                    reconnectionAttempts: 7,
+                });
 
                 socket.on("msg", (msg) => {
                     console.log("hello", msg);
@@ -28,7 +30,9 @@ export const socketApi = apiSlice.injectEndpoints({
                 });
 
                 socket.on("disconnect", () => {
-                    dispatch(resetProcess());
+                    if (!socket.connected) {
+                        dispatch(resetProcess());
+                    }
                 });
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
                     console.log("NOTIFY_VIDEO_INITIAL_DB_INFO", data);
@@ -36,7 +40,7 @@ export const socketApi = apiSlice.injectEndpoints({
                         setWsResponse(data)
                     )
                     dispatch(
-                        setVideoData(data.data)
+                        setVideoMetaData(data.data)
                     )
                 });
 
@@ -46,6 +50,7 @@ export const socketApi = apiSlice.injectEndpoints({
                         setWsResponse(data)
                     )
                 });
+
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSED, (data) => {
                     dispatch(
@@ -65,6 +70,9 @@ export const socketApi = apiSlice.injectEndpoints({
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PUBLISHED, (data) => {
                     dispatch(
                         setWsResponse(data)
+                    )
+                    dispatch(
+                        apiSlice.util.invalidateTags(['Video'])
                     )
                 });
 
