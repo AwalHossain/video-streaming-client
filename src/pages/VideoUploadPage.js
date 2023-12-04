@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // @mui
 
 
+import { useLocation, useNavigate } from 'react-router-dom';
 import { UploadModal } from './uploadModal';
 
 
@@ -28,14 +29,22 @@ import { UploadModal } from './uploadModal';
 
 export default function VideoUploadPage() {
   const [open, setOpen] = React.useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [prevLocation, setPrevLocation] = useState();
 
+  useEffect(() => {
+    setPrevLocation(location.pathname);
+  }, [location]);
   const handleClose = () => {
     setOpen(false);
+    console.log("prevLocation", prevLocation);
+    navigate('/');
 
-    // window.history.back();
   };
 
   return (
+
     <UploadModal open={open} onClose={handleClose} />
   );
 };
