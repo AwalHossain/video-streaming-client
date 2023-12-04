@@ -60,9 +60,9 @@ export const ProgressProvider = ({ children }) => {
             dispatch({ type: "SET_PROCESS", payload: dataProcess });
         }
 
-        if (!dataProcess || !uploadProgress) {
-            dispatch({ type: "RESET_PROCESS", payload: {} });
-        }
+        // if (!dataProcess || !uploadProgress) {
+        //     dispatch({ type: "RESET_PROCESS", payload: {} });
+        // }
 
     }, [dataProcess, uploadProgress]);
 
