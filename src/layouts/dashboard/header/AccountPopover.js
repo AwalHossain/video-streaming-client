@@ -71,6 +71,7 @@ export default function AccountPopover({ user }) {
         <Avatar src={"https://i.ibb.co/SK4Rj2T/user.png"} alt="photoURL" />
       </IconButton>
 
+
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -90,31 +91,46 @@ export default function AccountPopover({ user }) {
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {user.name}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user.email}
-          </Typography>
-        </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {
+          user?.name ? (
+            <>
+              <Box sx={{ my: 1.5, px: 2.5 }}>
+                <Typography variant="subtitle2" noWrap>
+                  {user.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                  {user.email}
+                </Typography>
+              </Box>
 
-        <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
-              {option.label}
+              <Divider sx={{ borderStyle: 'dashed' }} />
+
+              <Stack sx={{ p: 1 }}>
+                {MENU_OPTIONS.map((option) => (
+                  <MenuItem key={option.label} onClick={handleClose}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Stack>
+
+              <Divider sx={{ borderStyle: 'dashed' }} />
+
+              <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
+                Logout
+              </MenuItem>
+            </>
+
+          ) : (
+            <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
+              Login
             </MenuItem>
-          ))}
-        </Stack>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
-          Logout
-        </MenuItem>
+          )
+        }
       </Popover>
+
+
+
     </>
   );
 }
