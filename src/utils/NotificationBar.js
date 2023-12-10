@@ -1,30 +1,37 @@
-import { Alert, Snackbar } from '@mui/material';
-import React from 'react';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import React, { useEffect, useState } from 'react';
 
-const NotificationBar = ({ state, setState, severity }) => {
+const NotificationBar = ({ msg, severity }) => {
+    const [open, setOpen] = useState(false);
+
+    console.log(msg, 'msg from notification bar');
+    useEffect(() => {
+        if (msg) {
+            setOpen((prevOpen) => true); // Use the functional form of setOpen
+        }
+
+    }, [msg]);
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        // setState("");
-    }
+        setOpen(false);
+    };
+
     return (
-        <div>
-            <Snackbar
-                open={!!state}
-                autoHideDuration={3000}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                onClose={handleClose}
-            >
-                <Alert
-                    variant="filled"
-                    severity={severity || ""}
-                >
-                    {state}
-                </Alert>
-            </Snackbar>
-        </div>
-    )
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+            sx={{
+                zIndex: 9999,
+            }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+            <Alert variant='filled' onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                {msg}
+            </Alert>
+        </Snackbar>
+    );
 }
 
-export default NotificationBar
+export default NotificationBar;
