@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import Logo from '../../components/logo';
 import Header from '../dashboard/header';
 //
 
@@ -57,11 +56,7 @@ export default function PageLayout() {
 
     return (
         <StyledRoot>
-            <StyledHeader>
-                <Logo />
-            </StyledHeader>
             <Header onOpenNav={handleOpenNav} />
-
             <Main>
                 <Outlet />
             </Main>
