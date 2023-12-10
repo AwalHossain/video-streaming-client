@@ -10,42 +10,22 @@ import ThemeProvider from "./theme";
 // components
 import ProgressModals from "./components/modal/ProgressModals";
 import ScrollToTop from "./components/scroll-to-top";
+import Loading from "./components/ui/Loading";
 import { ProgressProvider } from "./contexts/ProgressContext";
-// Modify your processReducer to handle actions
-// const processReducer = (state, action) => {
-//   switch (action.type) {
-//     case "SET_PROCESS":
-//       const { fileName, name, ...rest } = action.payload;
-//       return {
-//         ...state,
-//         [fileName]: {
-//           ...state[fileName],
-//           [name]: { fileName, name, ...rest },
-//         },
-//       };
-//     case "RESET_PROCESS":
-//       return {};
-//     default:
-//       return state;
-//   }
-// };
+import useAuth from "./hooks/useAuth";
 
 export default function App() {
   const [wsResponse, setWsResponse] = useState(null);
-  // // const [process, setProcess] = useState({});
-  // const [process, dispatch] = useReducer(processReducer, {});
-  // const data = useSelector((state) => state.socket);
-  // // Modify your useEffect to dispatch an action with a type and payload
-  // useEffect(() => {
-  //   dispatch({ type: "SET_PROCESS", payload: data.process });
-  // }, [data]);
+  const { loading } = useAuth();
 
+  if (loading) {
+    return <Loading />;
+  }
   console.log("process", "process rom app", "data process");
 
   return (
     <ThemeProvider>
       <ScrollToTop />
-      {/* <StyledChart /> */}
       <Router />
 
       <Stack>
