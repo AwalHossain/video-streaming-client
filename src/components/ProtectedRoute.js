@@ -1,22 +1,23 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
 
 const ProtectedRoute = ({ children }) => {
-    const { user, loading } = useAuth();
+    const { user, userLoggedIn } = useSelector(state => state.auth)
     const navigate = useNavigate();
     const location = useLocation();
-
-    console.log('user', user, 'loading', loading);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (!user && !loading) {
+        if (!user && !userLoggedIn) {
             navigate('/login', { state: { from: location } });
         }
-    }, [user, loading, navigate, location]);
+        setIsLoading(false);
+    }, [user, userLoggedIn, navigate, location]);
 
-    if (loading || !user) {
-        return <div>Loading...</div>
+
+    if (isLoading) {
+        return <div>loading....</div>; // or return a loading spinner
     }
 
     return children;
