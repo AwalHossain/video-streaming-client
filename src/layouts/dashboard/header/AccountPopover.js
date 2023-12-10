@@ -1,9 +1,8 @@
 import { useState } from 'react';
 // @mui
 import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 // mocks_
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../../../redux/features/auth/authApi';
 // ----------------------------------------------------------------------
 
@@ -63,12 +62,12 @@ export default function AccountPopover({ user }) {
               height: '100%',
               borderRadius: '50%',
               position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
+              // bgcolor: "royalblue"
             },
           }),
         }}
       >
-        <Avatar src={"https://i.ibb.co/SK4Rj2T/user.png"} alt="photoURL" />
+        <Avatar src={"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"} alt="photoURL" />
       </IconButton>
 
 
@@ -123,7 +122,10 @@ export default function AccountPopover({ user }) {
 
           ) : (
             <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
-              Login
+              <Link to="/login">
+
+                Login
+              </Link>
             </MenuItem>
           )
         }
