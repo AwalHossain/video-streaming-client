@@ -10,7 +10,7 @@ import {
 } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 
-export default function Player() {
+export default function Player({ link, thumbnailUrl }) {
     let player = useRef(null);
     const muxPlaybackId = 'VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU';
     const src = `https://stream.mux.com/${muxPlaybackId}.m3u8`;
@@ -40,7 +40,7 @@ export default function Player() {
             <MediaPlayer
                 className="player"
                 title="Sprite Fight"
-                src={src}
+                src={link}
                 crossorigin
                 playsinline
                 onProviderChange={onProviderChange}
@@ -50,7 +50,7 @@ export default function Player() {
                 <MediaProvider>
                     <Poster
                         className="vds-poster"
-                        src="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=1200"
+                        src={thumbnailUrl}
                         alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
                     />
                 </MediaProvider>
@@ -58,7 +58,7 @@ export default function Player() {
                 {/* Layouts */}
                 <DefaultVideoLayout
                     icons={defaultLayoutIcons}
-                    thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
+                    thumbnails={{ thumbnailUrl }}
                 />
             </MediaPlayer>
         </>
