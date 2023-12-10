@@ -1,55 +1,18 @@
+import { Box, Container, Divider, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-// @mui
-import { Button, Container, Divider, Link, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// hooks
-import useResponsive from '../hooks/useResponsive';
-// components
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../components/logo';
-// sections
-import RegistrationForm from '../sections/auth/login/RegistrationForm';
-
-// ----------------------------------------------------------------------
-
-const StyledRoot = styled('div')(({ theme }) => ({
-    [theme.breakpoints.up('md')]: {
-        display: 'flex',
-    },
-}));
-
-const StyledSection = styled('div')(({ theme }) => ({
-    width: '100%',
-    maxWidth: 480,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    // boxShadow: theme.customShadows.card,
-    // backgroundColor: theme.palette.background.default,
-}));
-
-const StyledContent = styled('div')(({ theme }) => ({
-    maxWidth: 480,
-    margin: 'auto',
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    padding: theme.spacing(12, 0),
-}));
-
-// ----------------------------------------------------------------------
+import useResponsive from '../hooks/useResponsive';
+import GoogleLogin from '../sections/auth/GoogleLogin';
+import RegistrationForm from '../sections/auth/RegistrationForm';
+import { StyledContent, StyledRoot, StyledSection } from '../sections/auth/SignupPageStyles';
 
 export default function SignupPage() {
     const mdUp = useResponsive('up', 'md');
+    const locaiton = useLocation();
 
-    // const { data } = useGoogleLoginQuery();
+    const { from } = locaiton.state || { from: { pathname: '/dashboard' } };
 
-    const handleGoogle = () => {
-        window.open(`http://localhost:5000/api/v1/auth/google`, '_self');
-    }
-
-
-    // console.log(data, 'data goole');
     return (
         <>
             <Helmet>
@@ -67,23 +30,19 @@ export default function SignupPage() {
 
                 {mdUp && (
                     <StyledSection>
-                        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                            Hi, There
-                        </Typography>
-                        <div
-                            styled={{
-                                width: '100%', height: '100%',
-                                objectFit: 'cover',
+                        <Box
+                            sx={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginLeft: 'auto',
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                paddingRight: 5, // Add some padding to bring the image closer to the form
                             }}
                         >
-
-                            <img
-                                src="/assets/signup.png" alt="login" />
-                        </div>
+                            <img src="/assets/signup.png" alt="login" />
+                        </Box>
                     </StyledSection>
                 )}
 
@@ -93,26 +52,7 @@ export default function SignupPage() {
                             Sign Up in to Reely
                         </Typography>
 
-                        <Typography variant="body2" sx={{ mb: 5 }}>
-                            Already have an account? {''}
-                            <Link variant="subtitle2" href='/login'>Login</Link>
-                        </Typography>
-
-                        <Stack direction="row" spacing={2}>
-                            <Button onClick={handleGoogle} fullWidth size="large" color="inherit" variant="outlined">
-
-                                Sign Up with Google
-
-                            </Button>
-                            {/* 
-                            <Button fullWidth size="large" color="inherit" variant="outlined">
-                                <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
-                            </Button>
-
-                            <Button fullWidth size="large" color="inherit" variant="outlined">
-                                <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
-                            </Button> */}
-                        </Stack>
+                        <GoogleLogin from={from} />
 
                         <Divider sx={{ my: 3 }}>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -121,6 +61,11 @@ export default function SignupPage() {
                         </Divider>
 
                         <RegistrationForm />
+
+                        <Typography variant="body2" sx={{ mt: 3 }}>
+                            Already have an account? {''}
+                            <Link to='/login'>Login</Link>
+                        </Typography>
                     </StyledContent>
                 </Container>
             </StyledRoot>
