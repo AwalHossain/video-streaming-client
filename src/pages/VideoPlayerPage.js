@@ -33,7 +33,7 @@ const VideoPlayerPage = () => {
     content = (
       <Grid container spacing={2}>
         <Grid item xs={12} lg={8}>
-          <Player link={videoLink} title={data.thumbnailUrl} />
+          <Player link={data?.videoLink} thumbnailUrl={data.thumbnailUrl} />
           <Description video={data} />
         </Grid>
         <Grid item xs={12} lg={4}>
