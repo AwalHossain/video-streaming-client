@@ -127,7 +127,7 @@ function NotificationsPopover() {
   return (
     <>
       {
-        wsResponse && <NotificationBar severity="success" sx={{ mt: 3 }} state={wsResponse.message} />
+        wsResponse && <NotificationBar msg={wsResponse.message} severity="success" />
       }
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
         <Badge badgeContent={totalUnRead} color="error">
