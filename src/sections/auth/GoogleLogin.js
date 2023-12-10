@@ -35,23 +35,20 @@ export default function GoogleLogin({ from }) {
             const { data } = event.data;
 
             // Update user interface...
-            console.log(data, 'data from google login', event);
+            console.log(data, 'data from google login', from.pathname);
             dispatch(
                 userLoggedIn({
                     user: data,
                     userLoggedIn: data?.name ? true : false
                 })
             )
-                .then(() => {
-                    setLoading(false);
-                    navigate(`${from.pathname}`);
-                })
-                .catch((error) => {
-                    console.error('Error during login:', error);
-                })
-                .finally(() => {
-                    loginWindow.close();
-                });
+
+            setLoading(false);
+            console.log('checking routes from google login', from.pathname);
+            navigate(`${from.pathname}`);
+
+
+            loginWindow.close();
         };
 
         window.addEventListener('message', handleMessage);
