@@ -1,14 +1,15 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Button, Container, Divider, Link, Stack, Typography } from '@mui/material';
+import { Container, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
-import Iconify from '../components/iconify';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/logo';
+import GoogleLogin from '../sections/auth/GoogleLogin';
+import LoginForm from '../sections/auth/LoginForm';
 // sections
-import { LoginForm } from '../sections/auth/login';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,10 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+  const locaiton = useLocation();
+  const navigate = useNavigate();
+
+  const { from } = locaiton.state || { from: { pathname: '/dashboard' } };
 
   return (
     <>
@@ -83,17 +88,7 @@ export default function LoginPage() {
               Sign in to Minimal
             </Typography>
 
-            <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2" href='/register'>Signup</Link>
-            </Typography>
-
-            <Stack direction="row" spacing={2}>
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                Login with Google
-                <Iconify icon="eva:google-fill" color="#DF3E30" width={"100%"} height={"100%"} />
-              </Button>
-            </Stack>
+            <GoogleLogin from={from} />
 
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -102,6 +97,11 @@ export default function LoginPage() {
             </Divider>
 
             <LoginForm />
+
+            <Typography variant="body2" sx={{ mt: 3 }}>
+              Don't have an account?{''}
+              <Link to='/register'>Register</Link>
+            </Typography>
           </StyledContent>
         </Container>
       </StyledRoot>
