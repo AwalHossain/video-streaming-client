@@ -1,11 +1,13 @@
 import { useState } from 'react';
 // @mui
+import { Button, ClickAwayListener, IconButton, Input, InputAdornment, Slide } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // component
+import { useDispatch } from 'react-redux';
 import Iconify from '../../../components/iconify';
+import { setSearchFilter } from '../../../redux/features/filter/filterSlice';
 
 // ----------------------------------------------------------------------
 
@@ -34,14 +36,24 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
 
   const handleOpen = () => {
     setOpen(!open);
   };
 
-  const handleClose = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(search, "search");
+    dispatch(setSearchFilter(search));
     setOpen(false);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
@@ -54,21 +66,25 @@ export default function Searchbar() {
 
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
-            <Input
-              autoFocus
-              fullWidth
-              disableUnderline
-              placeholder="Search…"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-              sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
-            />
-            <Button variant="contained" onClick={handleClose}>
-              Search
-            </Button>
+            <form onSubmit={handleSubmit}>
+              <Input
+                autoFocus
+                fullWidth
+                disableUnderline
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search…"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                  </InputAdornment>
+                }
+                sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
+              />
+              <Button type='submit' variant="contained">
+                Search
+              </Button>
+            </form>
+
           </StyledSearchbar>
         </Slide>
       </div>

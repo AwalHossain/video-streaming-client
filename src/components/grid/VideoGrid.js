@@ -1,5 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useGetAllVideosQuery } from '../../redux/features/video/videoApi';
 import PaginationControl from '../paginate/PaginationControl';
 import VideoGridItem from './VideoGridItem';
@@ -11,6 +12,8 @@ const VideoGrid = () => {
         setPage(newPage)
     }
 
+    const { search, filter, sort } = useSelector((state) => state.filter);
+
     const handlePageSizeChange = (newPageSize) => {
         setPage(1);
         setPageSize(newPageSize)
@@ -18,7 +21,10 @@ const VideoGrid = () => {
 
     const params = {
         page: page,
-        pageSize: pageSize
+        pageSize: pageSize,
+        sortBy: 'createdAt',
+        sortOrder: sort,
+        searchTerm: search,
     };
 
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
