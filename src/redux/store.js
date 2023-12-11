@@ -1,8 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { apiSlice } from './features/api/apiSlice'
-import authSliceReducer from './features/auth/authSlice'
-import socketSliceReducer from './features/socket/socketSlice'
-import videoSliceReducer from './features/video/videoSlice'
+import { configureStore } from '@reduxjs/toolkit';
+import { apiSlice } from './features/api/apiSlice';
+import authSliceReducer from './features/auth/authSlice';
+import filterSliceReducer from './features/filter/filterSlice';
+import socketSliceReducer from './features/socket/socketSlice';
+import videoSliceReducer from './features/video/videoSlice';
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         auth: authSliceReducer,
         socket: socketSliceReducer,
         videoData: videoSliceReducer,
+        filter: filterSliceReducer,
 
     },
     // adding api middleware enables caching, invalidation, polling, and other features of `rtk-query`
