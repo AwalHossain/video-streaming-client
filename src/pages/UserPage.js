@@ -1,42 +1,43 @@
-import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 // @mui
 import {
-  Card,
-  Table,
-  Stack,
-  Paper,
   Avatar,
   Button,
-  Popover,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  IconButton,
   MenuItem,
+  Paper,
+  Popover,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
-  IconButton,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
+import Label from '../components/label';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
+import { useGetAllVideosQuery } from '../redux/features/video/videoApi';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
+  { id: 'title', label: 'Title', alignRight: false },
+  { id: 'viewCount', label: 'Views', alignRight: false },
+  { id: 'like', label: 'Likes', alignRight: false },
   { id: 'isVerified', label: 'Verified', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
@@ -87,6 +88,47 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [debouncedFilterName, setDebouncedFilterName] = useState(filterName);
+
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedFilterName(filterName);
+    }, 800);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [filterName]);
+
+  const params = {
+    page: page,
+    pageSize: rowsPerPage,
+    sortBy: orderBy || 'createdAt',
+    sortOrder: order,
+    searchTerm: debouncedFilterName || "",
+  };
+
+
+
+  const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
+
+  let content;
+
+  if (isLoading) {
+    // content = Array.from({ length: 6 }).map((_, index) => (
+    //   <VideoGridItem key={index} isLoading={isLoading} />
+    // ));
+  } else if (isError) {
+    content = <div>{error.message}</div>;
+  } else if (data?.data?.length === 0) {
+    content = <div>No data found</div>
+  } else {
+    // content = data?.data?.map((video) => (
+    //   <VideoGridItem key={video._id} video={video} />
+    // ));
+  }
+
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -138,7 +180,10 @@ export default function UserPage() {
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
+    console.log(event.target.value, 'event.target.value');
   };
+
+  console.log(data?.meta?.totalRecords, 'data from user page');
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
@@ -149,16 +194,16 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> VideoList </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            My Videos
           </Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
+            Upload New Video
           </Button>
         </Stack>
 
