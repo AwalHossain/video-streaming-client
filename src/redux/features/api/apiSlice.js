@@ -3,7 +3,6 @@ import axiosBaseQuery from '../../../helpers/axios/axiosBaseQuery'
 import REACT_APP_API_URL from '../../../utils/apiUrl'
 import { TAG_TYPES } from '../tags'
 
-console.log(process.env.REACT_APP_BASE_URL, 'check')
 export const apiSlice = createApi({
     name: 'api',
     reducerPath: 'api',
