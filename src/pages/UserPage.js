@@ -5,9 +5,11 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import {
   Avatar,
+  Box,
   Button,
   Card,
   Checkbox,
+  CircularProgress,
   Container,
   IconButton,
   MenuItem,
@@ -29,16 +31,15 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
-import USERLIST from '../_mock/user';
 import { useGetAllVideosQuery } from '../redux/features/video/videoApi';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Title', alignRight: false },
-  { id: 'viewCount', label: 'Views', alignRight: false },
-  { id: 'like', label: 'Likes', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
+  { id: 'viewsCount', label: 'Views', alignRight: false },
+  { id: 'likesCount', label: 'Likes', alignRight: false },
+  { id: 'visibility', label: 'visibility', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
@@ -69,7 +70,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.title.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -83,7 +84,7 @@ export default function UserPage() {
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('title');
 
   const [filterName, setFilterName] = useState('');
 
@@ -110,24 +111,12 @@ export default function UserPage() {
   };
 
 
+  console.log(params, 'params from user page');
 
   const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
   let content;
-
-  if (isLoading) {
-    // content = Array.from({ length: 6 }).map((_, index) => (
-    //   <VideoGridItem key={index} isLoading={isLoading} />
-    // ));
-  } else if (isError) {
-    content = <div>{error.message}</div>;
-  } else if (data?.data?.length === 0) {
-    content = <div>No data found</div>
-  } else {
-    // content = data?.data?.map((video) => (
-    //   <VideoGridItem key={video._id} video={video} />
-    // ));
-  }
+  let USERLIST = data?.data || [];
 
 
   const handleOpenMenu = (event) => {
@@ -146,18 +135,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = USERLIST.map((n) => n.title);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, title) => {
+    const selectedIndex = selected.indexOf(title);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, title);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -189,7 +178,7 @@ export default function UserPage() {
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = data?.data?.length === 0;
 
   return (
     <>
@@ -223,43 +212,59 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
 
-                    return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                        </TableCell>
-
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-
-                        <TableCell align="left">{company}</TableCell>
-
-                        <TableCell align="left">{role}</TableCell>
-
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
-                          </IconButton>
+                  {
+                    isFetching || isLoading ? (
+                      <TableRow>
+                        <TableCell colSpan={6}>
+                          <Box display="flex" justifyContent="center">
+                            <CircularProgress />
+                          </Box>
                         </TableCell>
                       </TableRow>
-                    );
-                  })}
+                    ) : (
+                      filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        console.log(row, 'row here from user page');
+                        const { _id: id, title, duration, status, viewsCount, likesCount, visibility } = row;
+                        const selectedVideo = selected.indexOf(title) !== -1;
+
+                        return (
+                          <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedVideo}>
+                            <TableCell padding="checkbox">
+                              <Checkbox checked={selectedVideo} onChange={(event) => handleClick(event, title)} />
+                            </TableCell>
+
+                            <TableCell component="th" scope="row" padding="none">
+                              <Stack direction="row" alignItems="center" spacing={2}>
+                                <Avatar alt={title} src={"avatarUrl"} />
+                                <Typography variant="subtitle2" noWrap>
+                                  {title}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+
+                            <TableCell align="left">{viewsCount}</TableCell>
+
+                            <TableCell align="left">{likesCount}</TableCell>
+
+                            <TableCell align="left">{visibility}</TableCell>
+
+                            <TableCell align="left">
+                              <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                            </TableCell>
+
+                            <TableCell align="right">
+                              <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                <Iconify icon={'eva:more-vertical-fill'} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )
+                  }
+
+
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
