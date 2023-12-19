@@ -1,53 +1,36 @@
-import React, { useEffect, useState } from 'react';
-// @mui
-
-
+import { Button } from '@mui/material'; // Import Button from Material-UI
+import { Box } from '@mui/system'; // Import Box from Material-UI
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSubscribeToEventsQuery } from '../redux/features/socket/socketApi';
 import { UploadModal } from './uploadModal';
 
-
-// interface FormValues {
-//   title: string;
-//   description: string;
-//   visibility: string;
-//   thumbnailUrl: string;
-//   language: string;
-//   recordingDate: Date | null;
-//   category: string;
-//   videoFile: File | null;
-// }
-
-/**
- *  Create a MUI form to save below video properties: 
-    title, description, visibility, 
-    thumbnailUrl, language, recordingDate, 
-    category,
- */
-
-
-
-
 export default function VideoUploadPage() {
+  const { _id: userId } = useSelector((state) => state.auth.user);
   const [open, setOpen] = React.useState(true);
+  useSubscribeToEventsQuery({ userId });
+
   const navigate = useNavigate();
   const location = useLocation();
   const [prevLocation, setPrevLocation] = useState();
 
-  useEffect(() => {
-    setPrevLocation(location.pathname);
-  }, [location]);
   const handleClose = () => {
     setOpen(false);
     console.log("prevLocation", prevLocation);
-    navigate('/');
-
   };
 
   return (
-
-    <UploadModal open={open} onClose={handleClose} />
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      marginTop={"20%"}
+    >
+      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+        Video Upload
+      </Button>
+      <UploadModal open={open} onClose={handleClose} />
+    </Box>
   );
 };
-
-
-
