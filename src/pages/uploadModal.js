@@ -61,6 +61,7 @@ const UploadModalContainer = styled(Paper)(({ theme }) => ({
     '&:hover': {
         cursor: 'pointer',
     },
+    zIndex: 10,
 }));
 
 const CloseIconButton = styled(IconButton)(({ theme }) => ({
@@ -256,7 +257,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                 </UploadModalContainer>
             </Modal>
             {
-                showForm && <VideoForm data={InitalMetaData} />
+                showForm && <VideoForm id={InitalMetaData?._id} />
             }
         </>
     );
