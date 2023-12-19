@@ -1,17 +1,20 @@
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const NotificationBar = ({ msg, severity }) => {
+const NotificationBar = () => {
+    const { message, severity } = useSelector(state => state.notification);
+    console.log(message, 'msg from notification bar');
     const [open, setOpen] = useState(false);
 
-    console.log(msg, 'msg from notification bar');
+    console.log(message, 'msg from notification bar');
     useEffect(() => {
-        if (msg) {
+        if (message) {
             setOpen((prevOpen) => true); // Use the functional form of setOpen
         }
 
-    }, [msg]);
+    }, [message]);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -28,7 +31,7 @@ const NotificationBar = ({ msg, severity }) => {
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
             <Alert variant='filled' onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
-                {msg}
+                {message}
             </Alert>
         </Snackbar>
     );
