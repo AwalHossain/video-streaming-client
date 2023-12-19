@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { Alert, Snackbar, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 // routes
 import Router from "./routes";
@@ -13,15 +13,14 @@ import ScrollToTop from "./components/scroll-to-top";
 import Loading from "./components/ui/Loading";
 import { ProgressProvider } from "./contexts/ProgressContext";
 import useAuth from "./hooks/useAuth";
+import NotificationBar from "./utils/NotificationBar";
 
 export default function App() {
-  const [wsResponse, setWsResponse] = useState(null);
   const { loading } = useAuth();
 
   if (loading) {
     return <Loading />;
   }
-  console.log("process", "process rom app", "data process");
 
   return (
     <ThemeProvider>
@@ -29,24 +28,7 @@ export default function App() {
       <Router />
 
       <Stack>
-        <Snackbar
-          open={!!wsResponse}
-          autoHideDuration={5000}
-          onClose={() => {
-            setWsResponse(null);
-          }}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            variant="outlined"
-            onClose={() => {
-              setWsResponse(null);
-            }}
-            severity={"success"}
-          >
-            {wsResponse}
-          </Alert>
-        </Snackbar>
+        <NotificationBar />
         <ProgressProvider>
           <ProgressModals />
         </ProgressProvider>
