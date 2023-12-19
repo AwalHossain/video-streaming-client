@@ -9,16 +9,17 @@ import { resetProcess, setProcess, setWsResponse } from "./socketSlice";
 export const socketApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         subscribeToEvents: builder.query({
-            queryFn: () => ({ data: [] }),
-
-            async onCacheEntryAdded(arg, {
+            queryFn: ({ userId }) => {
+                return { data: [] };
+            },
+            async onCacheEntryAdded({ userId }, {
                 updateCachedData,
                 dispatch,
                 getState,
                 cacheDataLoaded,
                 cacheEntryRemoved
             }) {
-                const socket = io(process.env.REACT_APP_BASE_URL, {
+                const socket = io(`${process.env.REACT_APP_BASE_URL}?userId=${userId}`, {
                     reconnectionAttempts: 7,
                 });
 
@@ -35,7 +36,6 @@ export const socketApi = apiSlice.injectEndpoints({
                     }
                 });
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
-                    console.log("NOTIFY_VIDEO_INITIAL_DB_INFO", data);
                     dispatch(
                         setWsResponse(data)
                     )
@@ -45,7 +45,6 @@ export const socketApi = apiSlice.injectEndpoints({
                 });
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED, (data) => {
-                    console.log("NOTIFY_VIDEO_UPLOADED", data);
                     dispatch(
                         setWsResponse(data)
                     )
@@ -98,7 +97,6 @@ export const socketApi = apiSlice.injectEndpoints({
                 );
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_AWS_S3_UPLOAD_PROGRESS, (data) => {
-                    console.log("NOTIFY_AWS_S3_UPLOAD_PROGRESS", data);
                     dispatch(
                         setProcess(data)
                     );
