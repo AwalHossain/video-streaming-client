@@ -24,11 +24,12 @@ export const videoApi = apiSlice.injectEndpoints(
                 }
             }),
             updateVideoMetaData: builder.mutation({
-                query: ({ id, data }) => {
+                query: ({ id }) => {
+                    console.log(id, 'id from updateVideoMetaData');
                     return {
                         url: `/videos/update/${id}`,
                         method: "PUT",
-                        body: data,
+                        body: { "formData": "title", }
                     }
                 },
                 invalidatesTags: ['Video'],
