@@ -1,4 +1,5 @@
-import { Box, Grid } from '@mui/material';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
+import { Box, Button, Grid, SvgIcon, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetAllVideosQuery } from '../../redux/features/video/videoApi';
@@ -32,26 +33,52 @@ const VideoGrid = () => {
     let content;
 
     if (isLoading) {
-        content = Array.from({ length: 6 }).map((_, index) => (
-            <VideoGridItem key={index} isLoading={isLoading} />
-        ));
+        content =
+            Array.from({ length: 6 }).map((_, index) => (
+                <Grid container wrap='wrap'>
+                    <VideoGridItem key={index} isLoading={isLoading} />
+                </Grid>
+            ));
     } else if (isError) {
         content = <div>{error.message}</div>;
     } else if (data?.data?.length === 0) {
         content = <div>No data found</div>
+    } else if (data?.data?.length > 0) {
+        content =
+            <Grid container wrap='wrap'>
+                {data?.data?.map((video) => (
+                    <VideoGridItem key={video._id} video={video} />
+                ))}
+            </Grid>
     } else {
-        content = data?.data?.map((video) => (
-            <VideoGridItem key={video._id} video={video} />
-        ));
+        content = (
+            <Box
+                flexDirection="column"
+                // justifyContent="center"
+                alignItems="center"
+                // height="100vh"
+                textAlign="center"
+            >
+                <Typography variant="h4" component="div" gutterBottom>
+                    Something went wrong
+                </Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SvgIcon component={RefreshIcon} />}
+                    onClick={() => refetch()}
+                >
+                    Retry
+                </Button>
+            </Box>
+        );
     }
 
     console.log(isLoading, 'isLoading from VideoGrid', data);
     return (
         <Box>
             <Box pt={3}>
-                <Grid container wrap='wrap'>
-                    {content}
-                </Grid>
+                {content}
             </Box>
             <PaginationControl
                 page={page}
@@ -60,7 +87,7 @@ const VideoGrid = () => {
                 onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
             />
-        </Box>
+        </Box >
     )
 }
 
