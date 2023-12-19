@@ -28,7 +28,9 @@ export default function Router() {
         { path: "user", element: <UserPage /> },
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
-        { path: "video-upload", element: <VideoUploadPage /> },
+        {
+          path: "video-upload", element: <ProtectedRoute> <VideoUploadPage /> </ProtectedRoute>
+        },
       ],
     },
     {
