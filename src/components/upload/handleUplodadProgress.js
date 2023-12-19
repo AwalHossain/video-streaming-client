@@ -2,11 +2,14 @@ import axios from "axios";
 import EventEmitter from "events";
 import _ from 'lodash';
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setMessage } from "../../redux/features/utils/notificationSlice";
 import REACT_APP_API_URL from "../../utils/apiUrl";
 
 export const progressEmitter = new EventEmitter();
 
 export const useUpload = () => {
+    const dispatch = useDispatch();
     const [uploading, setUploading] = useState(false);
     const [data, setData] = useState(null);
 
@@ -25,6 +28,7 @@ export const useUpload = () => {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
+            withCredentials: "include",
             onUploadProgress: (progressEvent) => {
                 setUploading(true);
 
@@ -58,7 +62,13 @@ export const useUpload = () => {
                 fileName: values.video.name,
                 progress: 100,
             });
-            console.error(error, 'chekcing axio');
+            dispatch(
+                setMessage({
+                    message: error.message,
+                    severity: 'error',
+                })
+            );
+            console.error(error.message, 'chekcing axio');
         }
     }
 
