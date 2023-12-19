@@ -23,10 +23,10 @@ import {
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import NotificationBar from '../../../utils/NotificationBar';
+import { setMessage } from '../../../redux/features/utils/notificationSlice';
 
 // ----------------------------------------------------------------------
 
@@ -83,8 +83,7 @@ function NotificationsPopover() {
   const [notifications, setNotifications] = useState([{}]);
   console.log('wsResponse', "waht causing this");
   const wsResponse = useSelector(state => state.socket.wsResponse, shallowEqual);
-
-  console.log('wsResponse', wsResponse);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (wsResponse) {
 
@@ -101,8 +100,20 @@ function NotificationsPopover() {
         },
         ...prevNotifications
       ]);
+
+
+      dispatch(
+        setMessage({
+          message: wsResponse.message,
+          severity: 'success'
+        })
+      )
+
     }
-  }, [wsResponse]);
+
+
+
+  }, [wsResponse, dispatch]);
 
   const totalUnRead = useMemo(() => notifications.filter((item) => item.isUnRead).length, [notifications]);
   const [open, setOpen] = useState(null);
@@ -126,9 +137,6 @@ function NotificationsPopover() {
 
   return (
     <>
-      {
-        wsResponse && <NotificationBar msg={wsResponse.message} severity="success" />
-      }
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
         <Badge badgeContent={totalUnRead} color="error">
           <Iconify icon="eva:bell-fill" />
