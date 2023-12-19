@@ -14,12 +14,12 @@ const navConfig = [
   {
     title: "dashboard",
     path: "/dashboard/app",
-    icon: icon("ic_analytics"),
+    icon: icon("dashboard"),
   },
   {
-    title: "user",
+    title: "Content",
     path: "/dashboard/user",
-    icon: icon("ic_user"),
+    icon: icon("videos"),
   },
   {
     title: "product",
@@ -34,12 +34,7 @@ const navConfig = [
   {
     title: "Video upload",
     path: "/dashboard/video-upload",
-    icon: icon("ic_blog"),
-  },
-  {
-    title: "Video player",
-    path: "/dashboard/video-player",
-    icon: icon("ic_blog"),
+    icon: icon("video-upload-fill"),
   },
   {
     title: "login",
