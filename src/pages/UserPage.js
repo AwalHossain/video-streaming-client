@@ -22,7 +22,7 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
-  Typography,
+  Typography
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
@@ -32,6 +32,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import { useGetAllVideosQuery } from '../redux/features/video/videoApi';
+import VideoForm from './VideoForm';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,8 @@ const TABLE_HEAD = [
   { id: 'likesCount', label: 'Likes', alignRight: false },
   { id: 'visibility', label: 'visibility', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
+  { id: 'createdAt', label: 'Created at', alignRight: false },
+  { id: '' },
   { id: '' },
 ];
 
@@ -84,13 +87,20 @@ export default function UserPage() {
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('title');
+  const [orderBy, setOrderBy] = useState('createdAt');
 
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const [debouncedFilterName, setDebouncedFilterName] = useState(filterName);
 
+  const [isEditing, setIsEditing] = useState(false); // Add state for editing
+
+  const [editingId, setEditingId] = useState(null);
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -119,11 +129,14 @@ export default function UserPage() {
   let USERLIST = data?.data || [];
 
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event, id) => {
+    setAnchorEl(event.currentTarget);
     setOpen(event.currentTarget);
+    setEditingId(id)
   };
 
   const handleCloseMenu = () => {
+    setAnchorEl(null);
     setOpen(null);
   };
 
@@ -143,6 +156,7 @@ export default function UserPage() {
   };
 
   const handleClick = (event, title) => {
+    console.log(title, 'title from the clinck');
     const selectedIndex = selected.indexOf(title);
     let newSelected = [];
     if (selectedIndex === -1) {
@@ -172,7 +186,18 @@ export default function UserPage() {
     console.log(event.target.value, 'event.target.value');
   };
 
-  console.log(data?.meta?.totalRecords, 'data from user page');
+  const handleEdit = (id) => {
+    console.log('edit here ', id);
+    handleCloseMenu();
+    setEditingId(id);
+    setIsEditing(true);
+  }
+
+  const handleCloseEdit = () => {
+    setIsEditing(false);
+    setEditingId(null);
+  }
+
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
@@ -224,8 +249,7 @@ export default function UserPage() {
                       </TableRow>
                     ) : (
                       filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                        console.log(row, 'row here from user page');
-                        const { _id: id, title, duration, status, viewsCount, likesCount, visibility } = row;
+                        const { _id: id, title, createdAt, status, viewsCount, likesCount, visibility } = row;
                         const selectedVideo = selected.indexOf(title) !== -1;
 
                         return (
@@ -252,11 +276,42 @@ export default function UserPage() {
                             <TableCell align="left">
                               <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                             </TableCell>
+                            <TableCell align="left">{new Date(createdAt).toLocaleString()}</TableCell>
 
                             <TableCell align="right">
-                              <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                              <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, id)}>
                                 <Iconify icon={'eva:more-vertical-fill'} />
                               </IconButton>
+                            </TableCell>
+                            <TableCell align="right">
+                              <Popover
+                                open={Boolean(open)}
+                                anchorEl={open}
+                                onClose={handleCloseMenu}
+                                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                PaperProps={{
+                                  sx: {
+                                    p: 1,
+                                    width: 140,
+                                    '& .MuiMenuItem-root': {
+                                      px: 1,
+                                      typography: 'body2',
+                                      borderRadius: 0.75,
+                                    },
+                                  },
+                                }}
+                              >
+                                <MenuItem onClick={() => handleEdit(USERLIST.find(video => video._id === editingId)?._id)}>
+                                  <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                                  {USERLIST.find(video => video._id === editingId)?.title}
+                                </MenuItem>
+
+                                <MenuItem sx={{ color: 'error.main' }}>
+                                  <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                                  Delete
+                                </MenuItem>
+                              </Popover>
                             </TableCell>
                           </TableRow>
                         );
@@ -311,34 +366,12 @@ export default function UserPage() {
         </Card>
       </Container>
 
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            width: 140,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover>
+      {
+        isEditing && (
+          <VideoForm id={editingId} onClose={handleCloseEdit} />
+        )
+      }
     </>
   );
 }
