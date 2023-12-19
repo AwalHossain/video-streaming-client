@@ -16,12 +16,14 @@ import StepTwo from '../components/upload/StepTwoForm';
 
 
 import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useUpdateVideoMetaDataMutation } from '../redux/features/video/videoApi';
+import { useGetVideoByIdQuery } from '../redux/features/video/videoApi';
 import { resetVideoMetaData } from '../redux/features/video/videoSlice';
+import REACT_APP_API_URL from '../utils/apiUrl';
 
 
 
@@ -69,44 +71,46 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 
 
 
-const VideoForm = ({ data }) => {
-    console.log(data, 'data from videoForm');
+const VideoForm = ({ id, onClose }) => {
     const [open, setOpen] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [updateVideoMetaData, { data: videUpdateData, isLoading }] = useUpdateVideoMetaDataMutation();
-    console.log(videUpdateData, 'data from useGetVideoMetaDataQuery');
+    console.log(id, 'data from videoForm update');
+
+    const { data: VideoData, isLoading: FetcLoading, error } = useGetVideoByIdQuery(id);
+
+    const data = VideoData?.data;
+
     const handleClose = () => {
         dispatch(resetVideoMetaData())
         setOpen(false);
+        onClose();
     };
-    console.log(data?.originalName, 'videData');
+    console.log(data?.originalName, 'videData', data?.title);
     const formik = useFormik({
         initialValues: {
             title: data?.title || '',
             description: '',
             visibility: data?.visibility || '',
-            // thumbnailUrl: '',
             language: data?.language || '',
             recordingDate: data?.recordingDate || "",
             category: data?.category || '',
-            videoFile: null,
         },
-        // enableReinitialize: true,
+        enableReinitialize: true,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             console.log(values, 'data from updateVideoMetaData', data?._id);
             console.log(values);
-            const updateData = await updateVideoMetaData({
-                id: data?._id,
-                ...values,
-            }).unwrap();
-            console.log(updateData);
-            if (updateData?.status === 'success') {
-                handleClose();
-                navigate(`/`);
-            }
+            await axios.put(`${REACT_APP_API_URL}/videos/update/${data?._id}`, values)
+                .then((res) => {
+                    console.log(res, 'res from updateVideoMetaData');
+                    dispatch(resetVideoMetaData())
+                    navigate('/dashboard');
+                })
+                .catch((err) => {
+                    console.log(err, 'err from updateVideoMetaData');
+                })
         },
     });
 
@@ -141,49 +145,53 @@ const VideoForm = ({ data }) => {
                     <CloseIconButton onClick={handleClose}>
                         <CloseIcon />
                     </CloseIconButton>
-                    <form onSubmit={formik.handleSubmit}>
-                        <Stepper activeStep={step - 1} alternativeLabel>
-                            {steps.map((label) => (
-                                <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                        <Grid container spacing={5} marginY={5}>
-                            {step === 1 && (
-                                <StepOne formik={formik} />
+                    {
+                        FetcLoading ? <h1>Loading....</h1> : (
+                            <form onSubmit={formik.handleSubmit}>
+                                <Stepper activeStep={step - 1} alternativeLabel>
+                                    {steps.map((label) => (
+                                        <Step key={label}>
+                                            <StepLabel>{label}</StepLabel>
+                                        </Step>
+                                    ))}
+                                </Stepper>
+                                <Grid container spacing={5} marginY={5}>
+                                    {step === 1 && (
+                                        <StepOne formik={formik} />
 
-                            )}
-                            {step === 2 && (
-                                <StepTwo formik={formik} />
-                            )}
-                        </Grid>
-                        <div>
-                            {step === 2 && (
-                                <LoadingButton
-                                    //fullWidth
-                                    size='large'
-                                    type='submit'
-                                    variant='contained'
-                                    disabled={formik.isSubmitting || !formik.isValid || isLoading}
+                                    )}
+                                    {step === 2 && (
+                                        <StepTwo formik={formik} />
+                                    )}
+                                </Grid>
+                                <div>
+                                    {step === 2 && (
+                                        <LoadingButton
+                                            //fullWidth
+                                            size='large'
+                                            type='submit'
+                                            variant='contained'
+                                            disabled={formik.isSubmitting || !formik.isValid}
+                                        >
+                                            Upload
+                                        </LoadingButton>
+                                    )}
+                                </div>
+                                <div
+                                    style={{
+                                        marginTop: 20,
+                                    }}
                                 >
-                                    Upload
-                                </LoadingButton>
-                            )}
-                        </div>
-                        <div
-                            style={{
-                                marginTop: 20,
-                            }}
-                        >
-                            <Button onClick={prevStep} disabled={step === 1}>
-                                Back
-                            </Button>
-                            <Button onClick={nextStep} disabled={step === 2}>
-                                Next
-                            </Button>
-                        </div>
-                    </form>
+                                    <Button onClick={prevStep} disabled={step === 1}>
+                                        Back
+                                    </Button>
+                                    <Button onClick={nextStep} disabled={step === 2}>
+                                        Next
+                                    </Button>
+                                </div>
+                            </form>
+                        )
+                    }
 
                 </UploadModalContainer>
             </Modal>
