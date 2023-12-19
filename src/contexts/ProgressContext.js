@@ -4,7 +4,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { progressEmitter } from '../components/upload/handleUplodadProgress';
-import { useSubscribeToEventsQuery } from '../redux/features/socket/socketApi';
 
 
 const ProgressContext = createContext({
@@ -33,7 +32,6 @@ const processReducer = (state, action) => {
 };
 
 export const ProgressProvider = ({ children }) => {
-    useSubscribeToEventsQuery();
     const [process, dispatch] = useReducer(processReducer, {});
     const dataProcess = useSelector((state) => state.socket.process);
     const [uploadProgress, setUploadProgress] = useState(null);
