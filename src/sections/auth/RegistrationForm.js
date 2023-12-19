@@ -6,7 +6,7 @@ import { Checkbox, IconButton, InputAdornment, Stack, TextField } from '@mui/mat
 // components
 import Iconify from '../../components/iconify';
 import { useRegisterMutation } from '../../redux/features/auth/authApi';
-import NotificationBar from '../../utils/NotificationBar';
+import Notify from './Notify';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +36,7 @@ export default function RegistrationForm() {
 
         try {
             const response = await register(data).unwrap()
+            console.log(response, 'response from register', msg);
             setMsg(response?.message)
             if (response?.data?.name) {
                 handleClick()
@@ -53,11 +54,20 @@ export default function RegistrationForm() {
 
     }
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setMsg(null);
+    }
+
+
 
     return (
         <>
             {
-                msg && <NotificationBar severity="error" sx={{ mt: 3 }} state={msg} setState={setMsg} />
+                msg && < Notify msg={msg} handleClose={handleClose} />
 
             }
             <form onSubmit={handleSubmit}>
