@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Container, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import VideoGrid from '../components/grid/VideoGrid';
+import Tags from '../components/tags/Tags';
 
 
 export default function DashboardAppPage() {
@@ -19,6 +20,7 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
+        <Tags />
         <VideoGrid />
       </Container>
     </>
