@@ -86,9 +86,17 @@ export const videoApi = apiSlice.injectEndpoints(
                     }
                 }
             }),
-
+            getAllTags: builder.query({
+                query: () => ({
+                    url: `/tags`,
+                    method: "GET",
+                }),
+                providesTags: ['Tag'],
+            }),
         }),
     }
 );
 
-export const { useGetVideoMetaDataQuery, useUpdateVideoMetaDataMutation, useGetAllVideosQuery, useGetVideoByIdQuery } = videoApi;
+export const { useGetVideoMetaDataQuery, useUpdateVideoMetaDataMutation, useGetAllVideosQuery, useGetVideoByIdQuery,
+    useGetAllTagsQuery
+} = videoApi;
