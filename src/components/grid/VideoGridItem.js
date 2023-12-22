@@ -1,4 +1,4 @@
-import { Box, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Avatar, Box, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,10 +8,11 @@ const VideoGridItem = ({ video, isLoading }) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const largeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
     return (
         isLoading ? (
-            <Box sx={{ width: isMobile ? '100%' : 210, marginRight: 3, my: 1 }}>
+            <Box sx={{ width: isMobile ? '100%' : 250, my: 1 }}>
                 <Skeleton variant="rectangular" width={210} height={118} />
 
 
@@ -22,23 +23,24 @@ const VideoGridItem = ({ video, isLoading }) => {
             </Box>
         ) : (
             <Link key={_id} to={`/watch/${_id}`} style={{ textDecoration: 'none', color: "black" }}  >
-                <Box sx={{ width: isMobile ? '100%' : 210, marginRight: 3, my: 1 }}>
+                <Box sx={{ width: "100%", height: "100%", my: 1 }}>
                     <img
-                        style={{ width: '100%', height: isMobile ? 'auto' : 118 }}
+                        style={{ width: '100%', height: isMobile ? 'auto' : 178 }}
                         alt={title}
                         src={thumbnailUrl}
                     />
 
-                    <Box sx={{ pr: 2 }}>
-                        <Typography gutterBottom variant="body1">
-                            {title}
-                        </Typography>
-                        <Typography display="block" variant="caption" color="text.secondary">
-                            {"Queen Official"}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                            {`${"40M"} • ${createdAt}`}
-                        </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
+                        <Avatar src={"/assets/images/avatars/avatar_default.jpg"} alt="" sx={{ width: 40, height: 40, marginRight: 1 }} />
+                        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                            <Typography variant="body1">{title}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                                {"Queen Official"}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                                {`${"40M"} • ${createdAt}`}
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
             </Link>)
