@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 // routes
 import Router from "./routes";
@@ -19,7 +19,18 @@ export default function App() {
   const { loading } = useAuth();
 
   if (loading) {
-    return <Loading />;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Loading />
+      </Box>
+    );
   }
 
   return (
