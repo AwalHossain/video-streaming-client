@@ -1,5 +1,3 @@
-
-
 export const TAG_TYPES = {
     Tag: 'Tag',
     Video: 'Video',
