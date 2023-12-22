@@ -8,8 +8,8 @@ const RelatedItemList = ({ id, thumbnail, duration, title, author, views, date }
             <Box
                 sx={{
                     position: 'relative',
-                    width: 168,
-                    height: 94,
+                    width: 200,
+                    height: 100,
                     flex: 'none',
                     transition: 'transform 0.3s',
                     '&:hover': {
@@ -34,7 +34,7 @@ const RelatedItemList = ({ id, thumbnail, duration, title, author, views, date }
                         bottom: 2,
                         bgcolor: 'grey.900',
                         color: 'grey.100',
-                        fontSize: '0.75rem',
+                        fontSize: '0.85rem',
                         px: 1,
                     }}
                 >
@@ -44,7 +44,7 @@ const RelatedItemList = ({ id, thumbnail, duration, title, author, views, date }
 
             <Box sx={{ flex: '1 1 auto' }}>
                 <Link to={`videos/${id}`} component={Link}>
-                    <Typography variant="body2" fontWeight="bold">
+                    <Typography variant="body1" fontWeight="bold">
                         {"Some video title"}
                     </Typography>
                 </Link>
