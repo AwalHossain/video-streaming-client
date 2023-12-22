@@ -1,5 +1,6 @@
+import { useTheme } from '@emotion/react';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
-import { Box, Button, Grid, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, Grid, SvgIcon, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetAllVideosQuery } from '../../redux/features/video/videoApi';
@@ -31,23 +32,28 @@ const VideoGrid = () => {
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
     let content;
+    const theme = useTheme();
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
 
     if (isLoading) {
         content =
-            Array.from({ length: 6 }).map((_, index) => (
-                <Grid container wrap='wrap'>
+            <Grid container wrap='wrap'>
+                {Array.from({ length: 6 }).map((_, index) => (
                     <VideoGridItem key={index} isLoading={isLoading} />
-                </Grid>
-            ));
+                ))}
+            </Grid>
     } else if (isError) {
         content = <div>{error.message}</div>;
     } else if (data?.data?.length === 0) {
         content = <div>No data found</div>
     } else if (data?.data?.length > 0) {
         content =
-            <Grid container wrap='wrap'>
+            <Grid container wrap='wrap' spacing={2}>
                 {data?.data?.map((video) => (
-                    <VideoGridItem key={video._id} video={video} />
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={video._id}>
+                        <VideoGridItem video={video} />
+                    </Grid>
                 ))}
             </Grid>
     } else {
@@ -74,7 +80,6 @@ const VideoGrid = () => {
         );
     }
 
-    console.log(isLoading, 'isLoading from VideoGrid', data);
     return (
         <Box>
             <Box pt={3}>
