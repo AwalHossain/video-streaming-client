@@ -22,7 +22,7 @@ const PaginationControl = ({
     }
 
     return (
-        <Box pt={10}>
+        <Box>
             <Container maxWidth="lg">
                 <Box py={6} display="flex" justifyContent="flex-end" gap={2}>
                     <Box pt={3} display="flex" justifyContent="flex-end" alignItems={'center'} gap={1}>
@@ -46,9 +46,9 @@ const PaginationControl = ({
                             variant="outlined"
                             color="primary"
                         >
-                            <MenuItem value={1}>1 per page</MenuItem>
-                            <MenuItem value={2}>2 per page</MenuItem>
                             <MenuItem value={5}>5 per page</MenuItem>
+                            <MenuItem value={10}>10 per page</MenuItem>
+                            <MenuItem value={15}>15 per page</MenuItem>
                         </Select>
                     </Box>
                 </Box>
