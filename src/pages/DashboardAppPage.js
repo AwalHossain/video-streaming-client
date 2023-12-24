@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import VideoGrid from '../components/grid/VideoGrid';
 import Tags from '../components/tags/Tags';
@@ -17,9 +17,6 @@ export default function DashboardAppPage() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
-        </Typography>
         <Tags />
         <VideoGrid />
       </Container>
