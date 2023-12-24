@@ -306,7 +306,7 @@ export default function UserPage() {
                               >
                                 <MenuItem onClick={() => handleEdit(USERLIST.find(video => video._id === editingId)?._id)}>
                                   <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                                  {USERLIST.find(video => video._id === editingId)?.title}
+                                  Edit
                                 </MenuItem>
 
                                 <MenuItem sx={{ color: 'error.main' }}>
