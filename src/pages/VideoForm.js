@@ -78,7 +78,7 @@ const VideoForm = ({ id, onClose }) => {
 
     console.log(id, 'data from videoForm update');
 
-    const { data: VideoData, isLoading: FetcLoading, error } = useGetVideoByIdQuery(id);
+    const { data: VideoData, isLoading: FetcLoading, error } = useGetVideoByIdQuery(id, { refetchOnMountOrArgChange: true, refetchOnFocus: true });
 
     const data = VideoData?.data;
 
@@ -91,7 +91,7 @@ const VideoForm = ({ id, onClose }) => {
     const formik = useFormik({
         initialValues: {
             title: data?.title || '',
-            description: '',
+            description: data?.description || '',
             visibility: data?.visibility || '',
             language: data?.language || '',
             recordingDate: data?.recordingDate || "",
@@ -173,7 +173,7 @@ const VideoForm = ({ id, onClose }) => {
                                             variant='contained'
                                             disabled={formik.isSubmitting || !formik.isValid}
                                         >
-                                            Upload
+                                            Update
                                         </LoadingButton>
                                     )}
                                 </div>
