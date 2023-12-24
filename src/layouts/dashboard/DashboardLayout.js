@@ -39,15 +39,15 @@ export default function DashboardLayout() {
     setOpen(true);
   }, []);
 
-  const handleCloseNav = useCallback(() => {
-    setOpen(false);
+  const handleToggleNav = useCallback(() => {
+    setOpen((prevOpen) => !prevOpen);
   }, []);
 
   return (
     <StyledRoot>
-      <Header onOpenNav={handleOpenNav} />
+      <Header onOpenNav={handleToggleNav} />
 
-      <Nav openNav={open} onCloseNav={handleCloseNav} />
+      <Nav openNav={open} onCloseNav={handleToggleNav} />
 
       <Main>
         <Outlet />
