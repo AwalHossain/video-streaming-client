@@ -113,13 +113,12 @@ export default function UserPage() {
   }, [filterName]);
 
   const params = {
-    page: page,
+    page: page + 1,
     pageSize: rowsPerPage,
     sortBy: orderBy || 'createdAt',
     sortOrder: order,
     searchTerm: debouncedFilterName || "",
   };
-
 
   console.log(params, 'params from user page');
 
@@ -128,6 +127,7 @@ export default function UserPage() {
   let content;
   let USERLIST = data?.data || [];
 
+  console.log(data, 'data from user page');
 
   const handleOpenMenu = (event, id) => {
     setAnchorEl(event.currentTarget);
@@ -172,7 +172,8 @@ export default function UserPage() {
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    console.log(newPage, 'newPage');
+    setPage(parseInt(newPage));
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -202,7 +203,7 @@ export default function UserPage() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
+  console.log(filteredUsers, 'filteredUsers from user page');
   const isNotFound = data?.data?.length === 0;
 
   return (
@@ -248,10 +249,11 @@ export default function UserPage() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      filteredUsers.map((row) => {
+
                         const { _id: id, title, createdAt, status, viewsCount, likesCount, visibility } = row;
                         const selectedVideo = selected.indexOf(title) !== -1;
-
+                        console.log(row, 'row from user page');
                         return (
                           <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedVideo}>
                             <TableCell padding="checkbox">
@@ -320,7 +322,7 @@ export default function UserPage() {
                   }
 
 
-                  {emptyRows > 0 && (
+                  {emptyRows > 0 && page === 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
                     </TableRow>
@@ -357,7 +359,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={data?.meta?.totalRecords}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
