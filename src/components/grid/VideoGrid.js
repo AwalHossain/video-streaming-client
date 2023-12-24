@@ -9,12 +9,12 @@ import VideoGridItem from './VideoGridItem';
 
 const VideoGrid = () => {
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(10);
     const handlePageChange = (newPage) => {
         setPage(newPage)
     }
 
-    const { search, filter, sort } = useSelector((state) => state.filter);
+    const { search, filter, sort, tags } = useSelector((state) => state.filter);
 
     const handlePageSizeChange = (newPageSize) => {
         setPage(1);
@@ -27,6 +27,7 @@ const VideoGrid = () => {
         sortBy: 'createdAt',
         sortOrder: sort,
         searchTerm: search,
+        tags: tags,
     };
 
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
