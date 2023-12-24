@@ -52,6 +52,16 @@ function Header({ onOpenNav }) {
   return (
     <StyledRoot>
       <StyledToolbar>
+        <IconButton
+          onClick={onOpenNav}
+          sx={{
+            mr: 1,
+            color: 'text.primary',
+            display: { lg: 'none' },
+          }}
+        >
+          <Iconify icon="eva:menu-2-fill" />
+        </IconButton>
         <Logo />
 
 
@@ -68,16 +78,6 @@ function Header({ onOpenNav }) {
           <Searchbar />
           <NotificationsPopover />
           <AccountPopover user={user} />
-          <IconButton
-            onClick={onOpenNav}
-            sx={{
-              mr: 1,
-              color: 'text.primary',
-              display: { lg: 'none' },
-            }}
-          >
-            <Iconify icon="eva:menu-2-fill" />
-          </IconButton>
         </Stack>
       </StyledToolbar>
     </StyledRoot>
