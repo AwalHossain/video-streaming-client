@@ -36,14 +36,17 @@ export const videoApi = apiSlice.injectEndpoints(
             }),
             getAllVideos: builder.query({
                 query: ({ searchTerm, tags, page, pageSize, sortBy, sortOrder }) => {
-                    const query = new URLSearchParams();
-                    if (searchTerm) query.append('searchTerm', searchTerm);
-                    if (tags) query.append('tags', tags);
-                    if (page) query.append('page', page);
-                    if (pageSize) query.append('limit', pageSize);
-                    if (sortBy) query.append('sortBy', sortBy);
-                    if (sortOrder) query.append('sortOrder', sortOrder);
-                    const queryString = query.toString() ? `${query.toString()}` : '';
+                    let queryString = '';
+                    if (searchTerm) queryString += `searchTerm=${searchTerm}&`;
+                    if (tags) tags.forEach((tag) => queryString += `tags=${tag}&`);
+                    if (page) queryString += `page=${page}&`;
+                    if (pageSize) queryString += `limit=${pageSize}&`;
+                    if (sortBy) queryString += `sortBy=${sortBy}&`;
+                    if (sortOrder) queryString += `sortOrder=${sortOrder}&`;
+
+                    // Remove the trailing '&'
+                    queryString = queryString.slice(0, -1);
+                    console.log(queryString, 'queryString from getAllVideos');
                     return {
                         url: `/videos?${queryString.toString()}`,
                         method: "GET",
