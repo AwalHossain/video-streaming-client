@@ -10,14 +10,13 @@ const StepOne = ({ formik }) => {
     console.log('title');
 
     // Sample tags. Replace this with your actual tags.
-    const tags = ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', "Tag6", "tag00"];
-
+    const tags = ["Comedy", "Fitness", "Food", "Gaming", "Music", "Sports", "Technology", "Travel", "Vlog", "Education", "Motivational", "Lifestyle", "Fashion", "Science", "Health", "Business", "Entertainment"];
     const handleTagsChange = (event, value) => {
         formik.setFieldValue('tags', value);
     };
     return (
         <>
-            <Grid item xs={12} spacing={5}>
+            <Grid item xs={12} >
                 <TextField
                     id="title"
                     name="title"
@@ -30,7 +29,7 @@ const StepOne = ({ formik }) => {
                 />
             </Grid>
 
-            <Grid item xs={12} spacing={5}>
+            <Grid item xs={12} >
                 <TextField
                     id="description"
                     name="description"
@@ -48,7 +47,7 @@ const StepOne = ({ formik }) => {
                     fullWidth
                 />
             </Grid>
-            <Grid item xs={12} spacing={5} >
+            <Grid item xs={12}  >
                 <Autocomplete
                     multiple
                     id="checkboxes-tags-demo"
@@ -70,7 +69,7 @@ const StepOne = ({ formik }) => {
                     )}
                     // style={{ width: 500 }}
                     renderInput={(params) => (
-                        <TextField {...params} label="Checkboxes" placeholder="Favorites" />
+                        <TextField {...params} label="Tags" placeholder="Favorites" />
                     )}
                 />
             </Grid>
@@ -78,4 +77,4 @@ const StepOne = ({ formik }) => {
     );
 }
 
-export default StepOne;
+export default StepOne; 
