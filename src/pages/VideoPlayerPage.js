@@ -13,8 +13,6 @@ const VideoPlayerPage = () => {
 
   const data = videoData?.data;
 
-  console.log(data?.tags, 'videoData from VideoPlayerPage', status);
-
   let content;
 
   if (isLoading) {
