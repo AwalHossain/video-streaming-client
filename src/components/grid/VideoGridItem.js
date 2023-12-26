@@ -2,7 +2,7 @@ import { Avatar, Box, Skeleton, Typography, useMediaQuery, useTheme } from '@mui
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const VideoGridItem = ({ video, isLoading }) => {
+const VideoGridItem = ({ video, isLoading, isFetching }) => {
     const { _id, title, author, views, date, duration, fileName, thumbnailUrl, createdAt } =
         video || {};
 
@@ -11,8 +11,8 @@ const VideoGridItem = ({ video, isLoading }) => {
     const largeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
     return (
-        isLoading ? (
-            <Box sx={{ width: isMobile ? '100%' : 250, my: 1 }}>
+        isLoading || isFetching ? (
+            <Box sx={{ width: "100%", height: "100%", my: 1 }}>
                 <Skeleton variant="rectangular" width={210} height={118} />
 
 
