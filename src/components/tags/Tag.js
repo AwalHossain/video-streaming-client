@@ -11,7 +11,6 @@ const Tag = ({ tag }) => {
     const isSelected = selectedTags.includes(tag?.name);
 
     const handleSelectTag = () => {
-        console.log('checking tag', isSelected, tag?.name, selectedTags);
         if (isSelected) {
             dispatch(tagRemoved(tag?.name))
         } else {
