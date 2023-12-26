@@ -13,7 +13,7 @@ const VideoPlayerPage = () => {
 
   const data = videoData?.data;
 
-  console.log(data, 'videoData from VideoPlayerPage', status);
+  console.log(data?.tags, 'videoData from VideoPlayerPage', status);
 
   let content;
 
@@ -37,7 +37,7 @@ const VideoPlayerPage = () => {
           <Description video={data} />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <RelatedVideo />
+          <RelatedVideo tags={data?.tags} />
         </Grid>
       </Grid>
     );
