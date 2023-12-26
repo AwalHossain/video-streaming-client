@@ -96,6 +96,7 @@ const VideoForm = ({ id, onClose }) => {
             language: data?.language || '',
             recordingDate: data?.recordingDate || "",
             category: data?.category || '',
+            tags: data?.tags || [],
         },
         enableReinitialize: true,
         validationSchema: validationSchema,
