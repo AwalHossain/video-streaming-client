@@ -27,8 +27,11 @@ const VideoGrid = () => {
         sortBy: 'createdAt',
         sortOrder: sort,
         searchTerm: search,
-        tags: tags,
     };
+
+    if (tags.length > 0) {
+        params.tags = tags;
+    }
 
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
@@ -37,11 +40,13 @@ const VideoGrid = () => {
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
 
-    if (isLoading) {
+    if (isLoading || isFetching) {
         content =
-            <Grid container wrap='wrap'>
-                {Array.from({ length: 6 }).map((_, index) => (
-                    <VideoGridItem key={index} isLoading={isLoading} />
+            <Grid container wrap='wrap' spacing={2}>
+                {Array.from({ length: 15 }).map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <VideoGridItem key={index} isLoading={isLoading} isFetching={isFetching} />
+                    </Grid>
                 ))}
             </Grid>
     } else if (isError) {
