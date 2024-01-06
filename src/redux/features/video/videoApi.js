@@ -68,6 +68,40 @@ export const videoApi = apiSlice.injectEndpoints(
                     }
                 }
             }),
+            getMyVideos: builder.query({
+                query: ({ searchTerm, tags, page, pageSize, sortBy, sortOrder }) => {
+                    let queryString = '';
+                    if (searchTerm) queryString += `searchTerm=${searchTerm}&`;
+                    if (tags) tags.forEach((tag) => queryString += `tags=${tag}&`);
+                    if (page) queryString += `page=${page}&`;
+                    if (pageSize) queryString += `limit=${pageSize}&`;
+                    if (sortBy) queryString += `sortBy=${sortBy}&`;
+                    if (sortOrder) queryString += `sortOrder=${sortOrder}&`;
+
+                    // Remove the trailing '&'
+                    queryString = queryString.slice(0, -1);
+                    console.log(queryString, 'queryString from getAllVideos');
+                    return {
+                        url: `/videos/myvideos?${queryString.toString()}`,
+                        method: "GET",
+                    }
+                },
+                providesTags: ['Video'],
+                async onQueryStarted(arg, {
+                    dispatch,
+                    queryFulfilled,
+                }) {
+                    try {
+                        const response = await queryFulfilled;
+                        console.log(response, 'response from getAllVideos');
+                        dispatch(
+                            setVideoData(response.data)
+                        )
+                    } catch (err) {
+
+                    }
+                }
+            }),
             getVideoById: builder.query({
                 query: (id) => ({
                     url: `/videos/${id}`,
@@ -80,7 +114,6 @@ export const videoApi = apiSlice.injectEndpoints(
                 }) {
                     try {
                         const response = await queryFulfilled;
-                        console.log(response, 'response from getVideoById');
                         dispatch(
                             setSingleVideo(response.data)
                         )
@@ -101,5 +134,5 @@ export const videoApi = apiSlice.injectEndpoints(
 );
 
 export const { useGetVideoMetaDataQuery, useUpdateVideoMetaDataMutation, useGetAllVideosQuery, useGetVideoByIdQuery,
-    useGetAllTagsQuery
+    useGetAllTagsQuery, useGetMyVideosQuery
 } = videoApi;
