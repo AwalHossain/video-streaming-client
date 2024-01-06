@@ -31,7 +31,7 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
-import { useGetAllVideosQuery } from '../redux/features/video/videoApi';
+import { useGetMyVideosQuery } from '../redux/features/video/videoApi';
 import VideoForm from './VideoForm';
 
 // ----------------------------------------------------------------------
@@ -122,7 +122,7 @@ export default function UserPage() {
 
   console.log(params, 'params from user page');
 
-  const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
+  const { isFetching, isLoading, isError, error, data, refetch } = useGetMyVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
   let content;
   let USERLIST = data?.data || [];
