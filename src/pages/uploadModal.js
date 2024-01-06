@@ -122,11 +122,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
             console.log(data, 'sumit oa di');
         },
     });
-
-    const handleAnimationComplete = () => {
-        onClose();
-        console.log('Animation completed');
-    }
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
 
