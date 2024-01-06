@@ -8,6 +8,7 @@ const initialState = {
         recordingDate: new Date().toISOString().split('T')[0],
         category: '',
         videoFile: '',
+        originalName: '',
     },
     videos: [],
     video: {},
