@@ -67,7 +67,20 @@ export default function AccountPopover({ user }) {
           }),
         }}
       >
-        <Avatar src={"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"} alt="photoURL" />
+        <Avatar>
+          {user?.avatar
+            ? <img src={user.avatar} alt="user avatar" />
+            : user?.name
+              ? user.name[0].toUpperCase()
+              : (
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: "center" }} noWrap>
+                    Login
+                  </Typography>
+                </Link>
+              )
+          }
+        </Avatar>
       </IconButton>
 
 
@@ -121,10 +134,12 @@ export default function AccountPopover({ user }) {
             </>
 
           ) : (
-            <MenuItem onClick={handleLogOut} sx={{ m: 1 }}>
-              <Link to="/login">
+            <MenuItem onClick={handleLogOut} sx={{ m: 1, textAlign: "center" }}>
+              <Link to="/login" style={{ textDecoration: "none" }}>
 
-                Login
+                <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: "center" }} noWrap>
+                  Login
+                </Typography>
               </Link>
             </MenuItem>
           )
