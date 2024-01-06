@@ -31,11 +31,11 @@ const VideoGridItem = ({ video, isLoading, isFetching }) => {
                     />
 
                     <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
-                        <Avatar src={"/assets/images/avatars/avatar_default.jpg"} alt="" sx={{ width: 40, height: 40, marginRight: 1 }} />
+                        <Avatar src={author ? author.avatar : "/assets/images/avatars/avatar_default.jpg"} alt="" sx={{ width: 40, height: 40, marginRight: 1 }} />
                         <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                             <Typography variant="body1">{title}</Typography>
                             <Typography variant="caption" color="text.secondary">
-                                {"Queen Official"}
+                                {author.name}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                                 {`${"40M"} • ${createdAt}`}
