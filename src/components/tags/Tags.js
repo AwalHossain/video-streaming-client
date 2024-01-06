@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { VIDEO_TAGS } from '../../utils/constants';
@@ -18,9 +18,9 @@ const Tags = () => {
             >
                 {tags.map((tag) => (
                     <Box key={tag.id} m={0.5}>
-                        <Typography variant="body1" fontWeight="fontWeightBold">
-                            <Tag tag={tag} />
-                        </Typography>
+                        {/* <Typography variant="body1" fontWeight="fontWeightBold"> */}
+                        <Tag tag={tag} />
+                        {/* </Typography> */}
                     </Box>
                 ))}
             </Grid>
