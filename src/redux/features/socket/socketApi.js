@@ -19,6 +19,9 @@ export const socketApi = apiSlice.injectEndpoints({
                 cacheDataLoaded,
                 cacheEntryRemoved
             }) {
+
+                if (!userId) return;
+
                 const socket = io(`${process.env.REACT_APP_BASE_URL}?userId=${userId}`, {
                     reconnectionAttempts: 7,
                 });
@@ -35,14 +38,7 @@ export const socketApi = apiSlice.injectEndpoints({
                         dispatch(resetProcess());
                     }
                 });
-                socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
-                    dispatch(
-                        setWsResponse(data)
-                    )
-                    dispatch(
-                        setVideoMetaData(data.data)
-                    )
-                });
+
 
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_UPLOADED, (data) => {
                     dispatch(
@@ -50,7 +46,15 @@ export const socketApi = apiSlice.injectEndpoints({
                     )
                 });
 
-
+                socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_INITIAL_DB_INFO, (data) => {
+                    console.log(data, 'data from NOTIFY_VIDEO_INITIAL_DB_INFO');
+                    dispatch(
+                        setWsResponse(data)
+                    )
+                    dispatch(
+                        setVideoMetaData(data.data)
+                    )
+                });
                 socket.on(NOTIFY_EVENTS.NOTIFY_VIDEO_PROCESSED, (data) => {
                     dispatch(
                         setWsResponse(data)
