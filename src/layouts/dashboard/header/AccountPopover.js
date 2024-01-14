@@ -42,7 +42,7 @@ export default function AccountPopover({ user }) {
       await logout().unwrap();
       // delete the cookie
       handleClose();
-      window.location.reload();
+      navigate('/login', { replace: true });
     } catch (err) {
       console.log(err);
     }
@@ -73,11 +73,7 @@ export default function AccountPopover({ user }) {
             : user?.name
               ? user.name[0].toUpperCase()
               : (
-                <Link to="/login" style={{ textDecoration: "none" }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: "center" }} noWrap>
-                    Login
-                  </Typography>
-                </Link>
+                <Avatar src={"GGGGGGGGGGGGGGGGG"} alt="photoURL" />
               )
           }
         </Avatar>
