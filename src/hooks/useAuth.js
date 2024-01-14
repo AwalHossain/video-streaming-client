@@ -6,7 +6,7 @@ const useAuth = () => {
     const [user, setUser] = useState(null);
 
     const { data, isLoading } = useCheckSessionQuery();
-    console.log('data', data);
+    console.log('data from the useAuth', data);
     useEffect(() => {
         if (data?.data) {
             setUser(data?.data);
