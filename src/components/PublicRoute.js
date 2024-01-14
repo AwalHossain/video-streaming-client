@@ -1,14 +1,12 @@
 import { useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+// replace with your auth context
+
 
 const PublicRoute = ({ children }) => {
-    const { user } = useSelector(state => state.auth)
-    const location = useLocation();
-    console.log();
-    const isPublicRoute = location.pathname === '/login' || location.pathname === '/register';
-    return (
-        user.name ? <Navigate to="/dashboard/app" /> : <Outlet />
-    )
+    const { user } = useSelector(state => state.auth); // replace with your auth context
+    console.log('user form the public route', user);
+    return user ? <Navigate to="/dashboard/app" /> : children;
 }
 
 export default PublicRoute
