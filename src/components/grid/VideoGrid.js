@@ -1,15 +1,17 @@
-import { useTheme } from '@emotion/react';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
-import { Box, Button, Grid, SvgIcon, Typography, useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Grid, SvgIcon, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from 'react-redux';
 import { useGetAllVideosQuery } from '../../redux/features/video/videoApi';
-import PaginationControl from '../paginate/PaginationControl';
 import VideoGridItem from './VideoGridItem';
 
 const VideoGrid = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [items, setItems] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [index, setIndex] = useState(2);
     const handlePageChange = (newPage) => {
         setPage(newPage)
     }
@@ -35,10 +37,32 @@ const VideoGrid = () => {
 
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
-    let content;
-    const theme = useTheme();
-    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const fetchMoreData = () => {
+        if (items.length >= data?.meta?.totalRecords) {
+            setHasMore(false);
+            return;
+        }
 
+        setPage(prevPage => prevPage + 1);
+    };
+
+    useEffect(() => {
+        setPage(1);
+        setHasMore(true);
+    }, [tags]);
+
+    useEffect(() => {
+        if (page === 1) {
+            setItems(data?.data || []);
+        } else if (data?.data?.length) {
+            const newItems = data.data.filter(
+                (item) => !items.some((prevItem) => prevItem._id === item._id)
+            );
+            setItems(prevItems => [...prevItems, ...newItems]);
+        }
+    }, [data, page]);
+
+    let content;
 
     if (isLoading || isFetching) {
         content =
@@ -51,12 +75,12 @@ const VideoGrid = () => {
             </Grid>
     } else if (isError) {
         content = <div>{error.message}</div>;
-    } else if (data?.data?.length === 0) {
+    } else if (items.length === 0) {
         content = <div>No data found</div>
-    } else if (data?.data?.length > 0) {
+    } else if (items.length > 0) {
         content =
             <Grid container wrap='wrap' spacing={2}>
-                {data?.data?.map((video) => (
+                {items.map((video) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={video._id}>
                         <VideoGridItem video={video} />
                     </Grid>
@@ -89,15 +113,16 @@ const VideoGrid = () => {
     return (
         <Box>
             <Box pt={3}>
-                {content}
+                <InfiniteScroll
+                    style={{ overflow: 'hidden' }}
+                    dataLength={items.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<h4>Loading...</h4>}
+                >
+                    {content}
+                </InfiniteScroll>
             </Box>
-            <PaginationControl
-                page={page}
-                pageSize={pageSize}
-                totalItems={data?.meta?.totalRecords}
-                onPageChange={handlePageChange}
-                onPageSizeChange={handlePageSizeChange}
-            />
         </Box >
     )
 }
