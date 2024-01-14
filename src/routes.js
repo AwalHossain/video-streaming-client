@@ -4,14 +4,13 @@ import DashboardLayout from "./layouts/dashboard";
 import SimpleLayout from "./layouts/simple";
 //
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import PageLayout from "./layouts/page/PageLayout";
-import BlogPage from "./pages/BlogPage";
 import DashboardAppPage from "./pages/DashboardAppPage";
 import LoginPage from "./pages/LoginPage";
 import Page404 from "./pages/Page404";
-import ProductsPage from "./pages/ProductsPage";
 import SignupPage from "./pages/SignupPage";
-import UserPage from "./pages/UserPage";
+import ContentPage from "./pages/UserPage";
 import VideoPlayerPage from "./pages/VideoPlayerPage";
 import VideoUploadPage from "./pages/VideoUploadPage";
 
@@ -25,9 +24,9 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: "app", element: <DashboardAppPage /> },
-        { path: "user", element: <UserPage /> },
-        { path: "products", element: <ProductsPage /> },
-        { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
+        { path: "content", element: <ContentPage /> },
+        // { path: "products", element: <ProductsPage /> },
+        // { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
         {
           path: "video-upload", element: <ProtectedRoute> <VideoUploadPage /> </ProtectedRoute>
         },
@@ -35,7 +34,7 @@ export default function Router() {
     },
     {
       path: "login",
-      element: <LoginPage />,
+      element: <PublicRoute> <LoginPage /></PublicRoute>,
     },
     {
       path: "/register",
