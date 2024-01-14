@@ -13,7 +13,7 @@ const axiosBaseQuery =
                     headers: {
                         "Content-Type": contentType || "application/json",
                     },
-                    withCredentials: 'include',
+                    withCredentials: true, // Changed 'include' to true
                 })
                 return { data: result.data }
             } catch (axiosError) {
