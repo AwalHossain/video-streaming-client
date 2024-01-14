@@ -7,7 +7,6 @@ import Router from "./routes";
 // theme
 import ThemeProvider from "./theme";
 
-// components
 import { useSelector } from "react-redux";
 import ProgressModals from "./components/modal/ProgressModals";
 import ScrollToTop from "./components/scroll-to-top";
