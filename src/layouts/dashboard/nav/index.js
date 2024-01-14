@@ -11,6 +11,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import NavSection from '../../../components/nav-section';
 import Scrollbar from '../../../components/scrollbar';
 //
+import { useSelector } from 'react-redux';
 import navConfig from './config';
 
 // ----------------------------------------------------------------------
@@ -34,7 +35,8 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const { user } = useSelector(state => state.auth);
+  const config = navConfig(user);
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 15, mx: 2.5 }}>
       </Box>
 
-      <NavSection data={navConfig} />
+      <NavSection data={config} />
 
       <Box sx={{ flexGrow: 1 }} />
 
