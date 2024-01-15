@@ -29,13 +29,14 @@ export default function GoogleLogin({ from }) {
 
     useEffect(() => {
         const handleMessage = (event) => {
-            if (event.origin !== "http://localhost:5000") return;
-
+            if (event.origin !== process.env.REACT_APP_BASE_URL) return;
             // Handle server response
             const { data } = event.data;
 
             // Update user interface...
-            console.log(data, 'data from google login', from.pathname);
+            console.log(event, 'data from google login', from.pathname);
+            // Save the accessToken in local storage
+            localStorage.setItem('accessToken', `Bearer ${data?.accessToken}`);
             dispatch(
                 userLoggedIn({
                     user: data,
