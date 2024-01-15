@@ -4,6 +4,7 @@ const axiosBaseQuery =
     ({ baseUrl } = { baseUrl: '' }) =>
         async ({ url, method, data, params, headers, contentType, fileName }) => {
 
+            const token = localStorage.getItem('accessToken');
             try {
                 const result = await axios({
                     url: baseUrl + url,
@@ -12,8 +13,9 @@ const axiosBaseQuery =
                     params,
                     headers: {
                         "Content-Type": contentType || "application/json",
+                        Authorization: token ? `${token}` : '',
                     },
-                    withCredentials: true, // Changed 'include' to true
+                    // withCredentials: "include", // Changed 'include' to true
                 })
                 return { data: result.data }
             } catch (axiosError) {
