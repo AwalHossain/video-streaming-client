@@ -103,7 +103,11 @@ const VideoForm = ({ id, onClose }) => {
         onSubmit: async (values) => {
             console.log(values, 'data from updateVideoMetaData', data?._id);
             console.log(values);
-            await axios.put(`${REACT_APP_API_URL}/videos/update/${data?._id}`, values)
+            await axios.put(`${REACT_APP_API_URL}/videos/update/${data?._id}`, values, {
+                headers: {
+                    Authorization: localStorage.getItem('accessToken'),
+                },
+            })
                 .then((res) => {
                     console.log(res, 'res from updateVideoMetaData');
                     dispatch(resetVideoMetaData())
