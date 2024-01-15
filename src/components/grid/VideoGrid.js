@@ -49,6 +49,7 @@ const VideoGrid = () => {
     useEffect(() => {
         setPage(1);
         setHasMore(true);
+        setItems([]);
     }, [tags]);
 
     useEffect(() => {
