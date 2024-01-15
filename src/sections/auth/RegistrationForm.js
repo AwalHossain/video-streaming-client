@@ -42,6 +42,8 @@ export default function RegistrationForm() {
                 handleClick()
             }
             if (response?.data?.name) {
+                // Store the accessToken in local storage
+                localStorage.setItem('accessToken', `Bearer ${response?.data?.accessToken}`);
                 handleClick()
             }
         } catch (err) {
