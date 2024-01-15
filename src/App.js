@@ -15,7 +15,6 @@ import { ProgressProvider } from "./contexts/ProgressContext";
 import useAuth from "./hooks/useAuth";
 import { useSubscribeToEventsQuery } from "./redux/features/socket/socketApi";
 import NotificationBar from "./utils/NotificationBar";
-
 export default function App() {
   const { loading } = useAuth();
   const user = useSelector((state) => state.auth.user);
