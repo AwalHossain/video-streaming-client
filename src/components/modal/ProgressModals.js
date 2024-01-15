@@ -24,6 +24,7 @@ const ProgressModals = () => {
                 Object.entries(videoProcess).map(
                     ([name, process]) =>
                         (process.status === "processing" && !isConnected) && (
+
                             <ProgressModal
                                 key={`${videoId}-${name}`}
                                 name={name}
@@ -31,6 +32,7 @@ const ProgressModals = () => {
                                 status={process.status}
                                 progress={process.progress}
                             />
+
                         )
                 )
             )}
