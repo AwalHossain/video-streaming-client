@@ -24,9 +24,11 @@ export const useUpload = () => {
             progressEmitter.emit('progress', progress);
         }, 5000);
 
+        const token = localStorage.getItem('accessToken');
         const config = {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                Authorization: token,
             },
             withCredentials: "include",
             onUploadProgress: (progressEvent) => {
