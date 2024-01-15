@@ -38,7 +38,10 @@ export default function LoginForm() {
       const response = await login(data).unwrap();
       console.log(response, 'response from login');
       setMsg(response?.message)
+
       if (response?.data?.name) {
+        // Store the accessToken in local storage
+        localStorage.setItem('accessToken', `Bearer ${response?.data?.accessToken}`);
         handleClick()
       }
     } catch (err) {
