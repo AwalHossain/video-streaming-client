@@ -41,6 +41,7 @@ export default function AccountPopover({ user }) {
     try {
       await logout().unwrap();
       // delete the cookie
+      localStorage.removeItem('accessToken');
       handleClose();
       navigate('/login', { replace: true });
     } catch (err) {
