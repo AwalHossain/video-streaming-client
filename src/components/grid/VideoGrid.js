@@ -119,7 +119,7 @@ const VideoGrid = () => {
                     dataLength={items.length}
                     next={fetchMoreData}
                     hasMore={hasMore}
-                    loader={<h4>Loading...</h4>}
+                // loader={<h4>Loading...</h4>}
                 >
                     {content}
                 </InfiniteScroll>
