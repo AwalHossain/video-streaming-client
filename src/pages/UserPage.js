@@ -31,6 +31,8 @@ import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useGetMyVideosQuery } from '../redux/features/video/videoApi';
 import VideoForm from './VideoForm';
 
@@ -99,8 +101,10 @@ export default function ContentPage() {
 
   const [editingId, setEditingId] = useState(null);
 
-
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const { userLoggedIn } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -352,6 +356,31 @@ export default function ContentPage() {
                     </TableRow>
                   </TableBody>
                 )}
+
+                {
+                  !userLoggedIn && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center" colSpan={6} sx={{ py: 5 }}>
+                          <Paper
+                            sx={{
+                              textAlign: 'center',
+                            }}
+                          >
+                            <Typography variant="h6" paragraph>
+                              Please <Link to="/login">Login</Link>
+                            </Typography>
+
+                            <Typography variant="body2">
+                              You need to login to see your videos
+                            </Typography>
+                          </Paper>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )
+                }
+
               </Table>
             </TableContainer>
           </Scrollbar>
