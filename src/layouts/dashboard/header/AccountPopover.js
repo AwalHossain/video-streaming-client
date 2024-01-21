@@ -3,38 +3,40 @@ import { useState } from 'react';
 import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material';
 // mocks_
 import { Link, useNavigate } from 'react-router-dom';
+import ProfilePage from '../../../pages/ProfilePage';
 import { useLogoutMutation } from '../../../redux/features/auth/authApi';
+import { disconnectSocket } from '../../../redux/features/socket/socketApi';
 // ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
-];
-
 // ----------------------------------------------------------------------
 
 export default function AccountPopover({ user }) {
+
   const [open, setOpen] = useState(null);
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const [logout, { isLoading, data }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleHome = () => {
+    navigate('/', { replace: true });
+    handleClose();
+  }
+
+  const handlProfile = () => {
+    setProfileModalOpen(true);
+    // handleClose();
+  }
+
+  const handleProfileModalClose = () => {
+    setProfileModalOpen(false);
   };
 
   const handleLogOut = async () => {
@@ -42,6 +44,7 @@ export default function AccountPopover({ user }) {
       await logout().unwrap();
       // delete the cookie
       localStorage.removeItem('accessToken');
+      disconnectSocket();
       handleClose();
       navigate('/login', { replace: true });
     } catch (err) {
@@ -116,11 +119,13 @@ export default function AccountPopover({ user }) {
               <Divider sx={{ borderStyle: 'dashed' }} />
 
               <Stack sx={{ p: 1 }}>
-                {MENU_OPTIONS.map((option) => (
-                  <MenuItem key={option.label} onClick={handleClose}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={handleHome} >
+                  Home
+                </MenuItem>
+                <MenuItem onClick={handlProfile}>
+                  Profile
+                </MenuItem>
+                <ProfilePage open={isProfileModalOpen} onClose={handleProfileModalClose} />
               </Stack>
 
               <Divider sx={{ borderStyle: 'dashed' }} />
