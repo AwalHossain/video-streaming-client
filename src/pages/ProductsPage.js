@@ -1,9 +1,9 @@
-import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container, Stack, Typography } from '@mui/material';
 // components
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { ProductCartWidget, ProductFilterSidebar, ProductList, ProductSort } from '../sections/@dashboard/products';
 // mock
 import PRODUCTS from '../_mock/products';
 
@@ -23,7 +23,7 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Products | Minimal UI </title>
+        <title> Dashboard: Products </title>
       </Helmet>
 
       <Container>
