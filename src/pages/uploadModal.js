@@ -134,12 +134,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                         <CloseIcon />
                     </CloseIconButton>
                     <Typography variant="h6">Upload Video</Typography>
-                    <Typography variant="body1" component="p">
-                        Drag and drop video files to upload
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                        Your videos will be private until you publish them.
-                    </Typography>
                     <div
                         style={{
                             display: 'flex',
@@ -156,7 +150,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                                     <Grid item xs={12} sm={12}>
                                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
                                             <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                                Upload Video
+                                                Upload Video (50MB Max)
                                                 <VisuallyHiddenInput
                                                     name='video'
                                                     accept='video/*,video/x-matroska'
@@ -186,7 +180,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                                     <Grid item xs={12} sm={12}>
                                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
                                             <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                                Upload WaterMark Image
+                                                Upload WaterMark Image (optional)
                                                 <VisuallyHiddenInput
                                                     name='image'
                                                     accept='image/*'
