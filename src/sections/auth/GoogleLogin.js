@@ -21,12 +21,24 @@ export default function GoogleLogin({ from }) {
         const top = window.innerHeight / 2 - height / 2;
 
         loginWindow = window.open(
-            `http://localhost:5000/api/v1/auth/google`,
+            `${process.env.REACT_APP_BASE_URL}/api/v1/auth/google`,
             '_blank',
             `width=${width},height=${height},top=${top},left=${left}`
         );
     }
+    useEffect(() => {
+        const handleFocus = () => {
+            if (loginWindow && loginWindow.closed) {
+                setLoading(false);
+            }
+        };
 
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [loginWindow]);
     useEffect(() => {
         const handleMessage = (event) => {
             if (event.origin !== process.env.REACT_APP_BASE_URL) return;
