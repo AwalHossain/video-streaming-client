@@ -4,7 +4,7 @@ import { apiSlice } from "../api/apiSlice";
 import { setVideoMetaData } from "../video/videoSlice";
 import { resetProcess, setProcess, setWsResponse } from "./socketSlice";
 
-
+let socket; // Declare socket variable outside of the funct
 
 export const socketApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -22,7 +22,7 @@ export const socketApi = apiSlice.injectEndpoints({
 
                 if (!userId) return;
 
-                const socket = io(`${process.env.REACT_APP_BASE_URL}?userId=${userId}`, {
+                socket = io(`${process.env.REACT_APP_BASE_URL}?userId=${userId}`, {
                     reconnectionAttempts: 7,
                 });
 
@@ -126,5 +126,12 @@ export const socketApi = apiSlice.injectEndpoints({
     })
 })
 
+export { socket };
+
+export function disconnectSocket() {
+    if (socket && socket.connected) {
+        socket.disconnect();
+    }
+}
 
 export const { useSubscribeToEventsQuery } = socketApi;
