@@ -2,13 +2,14 @@ import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { Box, Button, Grid, SvgIcon, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetFilters } from '../../redux/features/filter/filterSlice';
 import { useGetAllVideosQuery } from '../../redux/features/video/videoApi';
 import VideoGridItem from './VideoGridItem';
 
 const VideoGrid = () => {
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [items, setItems] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [index, setIndex] = useState(2);
@@ -34,6 +35,25 @@ const VideoGrid = () => {
     if (tags.length > 0) {
         params.tags = tags;
     }
+
+    const dispatch = useDispatch();
+
+    const [showResetButton, setShowResetButton] = useState(false);
+
+    const reset = () => {
+        dispatch(resetFilters());
+        setPage(1);
+        setShowResetButton(false);
+    };
+
+    useEffect(() => {
+        if (search || tags.length > 0) {
+            setShowResetButton(true);
+        } else {
+            setShowResetButton(false);
+        }
+    }, [search, tags]);
+
 
     const { isFetching, isLoading, isError, error, data, refetch } = useGetAllVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
 
@@ -114,6 +134,9 @@ const VideoGrid = () => {
     return (
         <Box>
             <Box pt={3}>
+                {showResetButton && (
+                    <Button onClick={reset}>Reset Filters</Button>
+                )}
                 <InfiniteScroll
                     style={{ overflow: 'hidden' }}
                     dataLength={items.length}
