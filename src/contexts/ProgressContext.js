@@ -39,6 +39,7 @@ export const ProgressProvider = ({ children }) => {
     useEffect(() => {
         const handleProgress = (data) => {
             setUploadProgress(data);
+            dispatch({ type: "SET_PROCESS", payload: data });
         }
 
         progressEmitter.on('progress', handleProgress);
