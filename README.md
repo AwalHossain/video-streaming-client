@@ -1,40 +1,69 @@
-## Minimal [(Free version)](https://minimal-kit-react.vercel.app/)
+# 🎥 MERN Video Streaming Platform - Frontend 🎥 (ONGOING)
 
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
+![Project Image](https://github.com/AwalHossain/video_streaming_service_client/assets/80216813/9e6b1889-c9d6-45d8-806e-27865f674912)
 
-> Free React Admin Dashboard made with Material-UI components and React.
+## 🌐 Overview
+The MERN Video Streaming frontend is a user-friendly interface built with React and the MUI library. It allows users to upload videos and images, view real-time progress of video processing, browse and play videos, and manage their own video content. The frontend is optimized with React.memo, useMemo, and useCallback for efficient rendering.
 
-![preview](public/assets/preview.jpg)
+## 🌟 Features
+- **Video and Image Upload:** Users can upload videos and optionally, images to the server. The progress of video processing is displayed in real-time.
+- **Video Browsing and Playback:** Users can browse and play videos, similar to YouTube. Each video displays its view count, duration, and upload time.
+- **User Interaction:** Users can like and unlike videos, enhancing engagement and interaction.
+- **Tag System:** A tag system is implemented to display related videos when a user plays a video.
+- **User Video Management:** Users can manage their own videos, including updating and deleting.
+- **Performance Optimization:** The frontend is optimized with React.memo, useMemo, and useCallback for efficient rendering.
 
-| [Minimal Free](https://minimal-kit-react.vercel.app/) | [Minimal](https://material-ui.com/store/items/minimal-dashboard/) |
-| ----------------------------------------------------- | :---------------------------------------------------------------- |
-| **6** Demo pages                                      | **50+** demo pages                                                |
-| -                                                     | ✓ Multi-language                                                  |
-| -                                                     | ✓ Dark/Light Mode 🌓                                              |
-| -                                                     | ✓ [More components](https://minimals.cc/components)               |
-| -                                                     | ✓ Next.js version                                                 |
-| -                                                     | ✓ TypeScript version                                              |
-| -                                                     | ✓ Design files (Figma & Sketch)                                   |
+  ## 🚀 Getting Started
 
-## Page demo
+### Prerequisites
 
-- [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
-- [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
-- [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
-- [Login](https://minimal-kit-react.vercel.app/login)
-- [Not Found](https://minimal-kit-react.vercel.app/404)
+To get started with the MERN Video Streaming frontend, you will need to have the following software installed on your local machine:
 
-## Getting started
+- [Node.js](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com/)
 
-- Recommended `node js 16.x` and `npm 6+`. (suggestion v16.15.0)
-- Install dependencies: `npm install` / `yarn install`
-- Start the project: `npm run start` / `yarn start`
+  
+## 💻 Installation
 
-## License
+To run the project locally, follow these steps:
 
-Distributed under the MIT License. See [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) for more information.
+### 1. Clone the repository
 
-## Contact us
+```bash
+git clone https://github.com/AwalHossain/Video_streaming_Client.git
 
-Email Us: support@minimals.cc
+
+### 2. Install dependencies using npm
+
+#### 2.1 Server dependencies
+
+```bash
+npm install
+```
+
+### 4. Start the application
+
+This will start the frontend services.
+
+```bash
+npm run dev
+```
+
+
+
+## 🤝 Contributing to MERN Video Streaming
+
+MERN Video Streaming is an open-source project and we welcome contributions from
+the community. If you would like to contribute to the project, please refer to
+the `CONTRIBUTING.md` file for guidelines.
+
+## 📜 License
+
+MERN Video Streaming is licensed under the MIT License. Please see the `LICENSE`
+file for more information.
+
+## 📝 Note
+This project is still under development. The README will be updated as the project progresses. Thank you for your interest and stay tuned for more updates!.
+
+This readme file is not finished yet. I will update it as I go along with the
+project. Thanks.
