@@ -30,7 +30,7 @@ To run the project locally, follow these steps:
 
 ```bash
 git clone https://github.com/AwalHossain/Video_streaming_Client.git
-
+```
 
 ### 2. Install dependencies using npm
 
@@ -38,7 +38,7 @@ git clone https://github.com/AwalHossain/Video_streaming_Client.git
 
 ```bash
 npm install
-
+```
 
 ### 4. Start the application
 
@@ -46,7 +46,7 @@ This will start the frontend services.
 
 ```bash
 npm run dev
-
+```
 
 
 ## 🤝 Contributing to MERN Video Streaming
