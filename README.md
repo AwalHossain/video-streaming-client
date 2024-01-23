@@ -38,7 +38,7 @@ git clone https://github.com/AwalHossain/Video_streaming_Client.git
 
 ```bash
 npm install
-```
+
 
 ### 4. Start the application
 
@@ -46,7 +46,6 @@ This will start the frontend services.
 
 ```bash
 npm run dev
-```
 
 
 
