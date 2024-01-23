@@ -1,6 +1,5 @@
 # 🎥 MERN Video Streaming Platform - Frontend 🎥 (ONGOING)
 
-![Project Image](https://github.com/AwalHossain/video_streaming_service_client/assets/80216813/9e6b1889-c9d6-45d8-806e-27865f674912)
 
 ## 🌐 Overview
 The MERN Video Streaming frontend is a user-friendly interface built with React and the MUI library. It allows users to upload videos and images, view real-time progress of video processing, browse and play videos, and manage their own video content. The frontend is optimized with React.memo, useMemo, and useCallback for efficient rendering.
