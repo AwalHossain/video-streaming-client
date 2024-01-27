@@ -6,7 +6,7 @@ import ProgressModal from './ProgresModal';
 const ProgressModals = () => {
     const { process } = useProgress();
     const isConnected = useSelector(state => state.socket.resetProcess);
-    console.log(isConnected, 'isConnected');
+    console.log(process, 'isConnected from ProgressModals,', isConnected, 'isConnected from ProgressModals', !isConnected);
     return (
         <Stack
             direction="column"
@@ -23,8 +23,12 @@ const ProgressModals = () => {
             {Object.entries(process).map(([videoId, videoProcess]) =>
                 Object.entries(videoProcess).map(
                     ([name, process]) =>
+                        //     if (process.status === "processing" && Object.keys(isConnected).length === 0) {
+                        //         console.log('ProgressModals', process);
+                        //         // ...
+                        //     }
+                        // }
                         (process.status === "processing" && !isConnected) && (
-
                             <ProgressModal
                                 key={`${videoId}-${name}`}
                                 name={name}
