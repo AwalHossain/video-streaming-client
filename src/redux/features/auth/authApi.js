@@ -18,7 +18,6 @@ export const authApi = apiSlice.injectEndpoints(
                 }) {
                     try {
                         const response = await queryFulfilled;
-                        console.log(response);
 
                         dispatch(
                             userLoggedIn({
