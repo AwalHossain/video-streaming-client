@@ -21,8 +21,9 @@ import {
     PictureInPicture as ImageIcon,
     VideoLibrary as VideoLibraryIcon
 } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useUpload } from '../components/upload/handleUplodadProgress';
+import { connectSocket } from '../redux/features/socket/socketApi';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -104,6 +105,11 @@ export const UploadModal = React.memo(({ open, onClose }) => {
     const [showForm, setShowForm] = useState(false);
     const { upload, uploading, data } = useUpload();
 
+    const user = useSelector((state) => state.auth.user);
+    const userId = user ? user._id : null;
+    const dispatch = useDispatch();
+    connectSocket(userId, dispatch);
+
     useEffect(() => {
         if (InitalMetaData?.originalName) {
             setShowForm(true);
@@ -119,7 +125,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             const data = await upload(values);
-            console.log(data, 'sumit oa di');
         },
     });
     const [selectedVideo, setSelectedVideo] = useState(null);
