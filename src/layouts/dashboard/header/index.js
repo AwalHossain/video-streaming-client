@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { AppBar, Box, IconButton, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
@@ -9,7 +9,7 @@ import Iconify from '../../../components/iconify';
 //
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Logo from '../../../components/logo';
+import { Link } from 'react-router-dom';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import Searchbar from './Searchbar';
@@ -62,9 +62,25 @@ function Header({ onOpenNav }) {
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-        <Logo />
-
-
+        <Link to="/"
+          style={{
+            textDecoration: 'none',
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="div"
+            sx={{
+              textDecoration: 'none !important',
+              fontFamily: 'Monaco, monospace',
+              fontWeight: 'bold',
+              color: '#3f51b5',
+              cursor: 'pointer',
+            }}
+          >
+            Reely
+          </Typography>
+        </Link>
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack
