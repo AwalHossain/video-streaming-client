@@ -5,6 +5,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     wsResponse: null,
     process: {},
+    resetProcess: false,
+    isConnected: false
 
 }
 
@@ -25,15 +27,17 @@ const socketSlice = createSlice({
 
         },
         resetProcess: (state, action) => {
-            state.resetProcess = {
-                "action.type": "RESET_PROCESS"
-            }
+            state.process = {}
+            state.resetProcess = action.payload
+        },
+        setConnected: (state, action) => {
+            state.isConnected = action.payload
         }
     }
 })
 
 
-export const { setWsResponse, setProcess, resetProcess } = socketSlice.actions
+export const { setWsResponse, setProcess, resetProcess, setConnected } = socketSlice.actions
 
 
 export default socketSlice.reducer
