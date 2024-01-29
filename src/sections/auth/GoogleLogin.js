@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Iconify from '../../components/iconify';
 import { userLoggedIn } from '../../redux/features/auth/authSlice';
 
-export default function GoogleLogin({ from }) {
+export default function GoogleLogin({ from, text }) {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     let loginWindow;
@@ -97,7 +97,7 @@ export default function GoogleLogin({ from }) {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginRight: 1 }}>
                 <Iconify icon="eva:google-fill" width={22} height={22} />
             </Box>
-            Sign up with Google
+            {text} with Google
         </Button>
     );
 }
