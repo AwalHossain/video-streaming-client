@@ -85,10 +85,10 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              Sign in to Reely
             </Typography>
 
-            <GoogleLogin from={from} />
+            <GoogleLogin from={from} text={"Login"} />
 
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
