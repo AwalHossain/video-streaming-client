@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Checkbox, IconButton, InputAdornment, Link, Stack, TextField } from '@mui/material';
+import { Button, IconButton, InputAdornment, Link, Stack, TextField } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
 import { useLoginMutation } from '../../redux/features/auth/authApi';
@@ -56,6 +56,38 @@ export default function LoginForm() {
 
   };
 
+  const handleTestAccountLogin = async () => {
+    setEmail('test@test.com');
+    setPassword('123456');
+
+    const data = {
+      email: 'test@test.com',
+      password: '123456'
+    };
+
+    try {
+      const response = await login(data).unwrap();
+      console.log(response, 'response from login');
+      setMsg(response?.message)
+
+      if (response?.data?.name) {
+        // Store the accessToken in local storage
+        localStorage.setItem('accessToken', `Bearer ${response?.data?.accessToken}`);
+        handleClick()
+      }
+    } catch (err) {
+      console.log(err, 'err from login', loginErr);
+
+      if (err.status === 'FETCH_ERROR') {
+        setMsg('Network error. Please check your internet connection and try again.');
+      } else {
+        setMsg(err.data?.message || err.message || loginErr.message);
+      }
+    }
+  }
+
+
+
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -99,16 +131,28 @@ export default function LoginForm() {
         </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <Checkbox name="remember" label="Remember me" />
-          <Link variant="subtitle2" underline="hover">
+          {/* <Checkbox name="remember" label="Remember me" /> */}
+          <Link variant="subtitle2" underline="hover" style={{
+            cursor: 'pointer '
+          }}>
             Forgot password?
           </Link>
         </Stack>
+
         {
           isLoading ? <LoadingButton fullWidth size="large" type="submit" variant="contained" loading /> :
             <LoadingButton fullWidth size="large" type="submit" variant="contained" >
               Login </LoadingButton>
         }
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+          <Button variant="contained" onClick={handleTestAccountLogin}
+            fullWidth
+            size="large"
+            type="submit"
+          >
+            Use Trial Account
+          </Button>
+        </Stack>
       </form>
     </>
   );
