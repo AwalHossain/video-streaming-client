@@ -138,7 +138,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                     <CloseIconButton onClick={onClose}>
                         <CloseIcon />
                     </CloseIconButton>
-                    <Typography variant="h6">Upload Video</Typography>
+                    <Typography variant="h4">Upload Video</Typography>
                     <div
                         style={{
                             display: 'flex',
@@ -232,7 +232,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                         By submitting your videos to YouTube, you acknowledge that you agree
                         to YouTube's{' '}
                         <a
-                            href="https://www.youtube.com/t/terms"
+                            href="https://www.reely.tech/"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -240,7 +240,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                         </a>{' '}
                         and{' '}
                         <a
-                            href="https://www.youtube.com/yt/about/policies/"
+                            href="https://www.reely.tech/"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
