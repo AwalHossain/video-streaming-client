@@ -7,7 +7,8 @@ import {
     Paper,
     Step,
     StepLabel,
-    Stepper
+    Stepper,
+    Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useState } from 'react';
@@ -153,6 +154,9 @@ const VideoForm = ({ id, onClose }) => {
                     {
                         FetcLoading ? <h1>Loading....</h1> : (
                             <form onSubmit={formik.handleSubmit}>
+                                <Typography variant='h4' gutterBottom>
+                                    Update Video Metadata
+                                </Typography>
                                 <Stepper activeStep={step - 1} alternativeLabel>
                                     {steps.map((label) => (
                                         <Step key={label}>
