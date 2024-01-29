@@ -1,4 +1,4 @@
-# 🎥 MERN Video Streaming Platform - Frontend 🎥 (ONGOING)
+# 🎥 MERN Video Streaming Platform 🎥 (ONGOING)
 
 
 ## 🌐 Overview
