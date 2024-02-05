@@ -17,6 +17,8 @@ The MERN Video Streaming frontend is a user-friendly interface built with React 
 ### Prerequisites
 
 To get started with the MERN Video Streaming frontend, you will need to have the following software installed on your local machine:
+Check server side code: [server](https://github.com/AwalHossain/video_streaming_service_server/blob/main/README.md)
+
 
 - [Node.js](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
