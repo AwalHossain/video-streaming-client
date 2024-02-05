@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { bgBlur } from '../../../utils/cssStyles';
 // component
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Iconify from '../../../components/iconify';
 import { setSearchFilter } from '../../../redux/features/filter/filterSlice';
 
@@ -38,6 +39,8 @@ export default function Searchbar() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  // Inside your Searchbar component
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(!open);
@@ -48,6 +51,9 @@ export default function Searchbar() {
     console.log(search, "search");
     dispatch(setSearchFilter(search));
     setOpen(false);
+    // navigate to dashboard page
+    // navigate to dashboard page
+    navigate('/dashboard/app');
   };
 
   const handleClose = () => {
