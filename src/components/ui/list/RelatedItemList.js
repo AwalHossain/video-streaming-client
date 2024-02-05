@@ -1,9 +1,10 @@
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Avatar, Box, Skeleton, Typography } from '@mui/material';
+import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const RelatedItemList = ({ video = {}, index, isLoading, isFetching }) => {
-    const { _id, thumbnailUrl, duration, title, author, views, date } = video;
+    const { _id, thumbnailUrl, duration, title, author, viewsCount, createdAt } = video;
     return (
 
         isLoading || isFetching ? (
@@ -30,7 +31,7 @@ const RelatedItemList = ({ video = {}, index, isLoading, isFetching }) => {
                         },
                     }}
                 >
-                    <Link to={`videos/${_id}`} >
+                    <Link to={`/watch/${_id}`}  >
                         <img src={thumbnailUrl} alt="Some video title"
                             style={{
                                 objectFit: 'cover',
@@ -51,23 +52,26 @@ const RelatedItemList = ({ video = {}, index, isLoading, isFetching }) => {
                             px: 1,
                         }}
                     >
-                        {"10:34"}
+                        {duration}
                     </Typography>
                 </Box>
 
                 <Box sx={{ flex: '1 1 auto' }}>
-                    <Link to={`videos/${_id}`} component={Link}>
+                    <Link to={`/watch/${_id}`} >
                         <Typography variant="body1" fontWeight="bold">
                             {title}
                         </Typography>
                     </Link>
-                    <Link to={`videos/${_id}`} component={Link} sx={{ color: 'text.secondary', mt: 2, '&:hover': { color: 'text.primary' } }}>
+                    <Link to={`/watch/${_id}`} sx={{ color: 'text.secondary', mt: 2, '&:hover': { color: 'text.primary' } }}>
                         <Typography variant="body2">
-                            {"author"}
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Avatar src={author ? author.avatar : "/assets/images/avatars/avatar_default.jpg"} alt="" style={{ width: "20px", height: "20px", marginRight: "5px" }} />
+                                {author.name}
+                            </div>
                         </Typography>
                     </Link>
                     <Typography variant="body2" color="text.secondary" mt={1}>
-                        {"40M"}. {"10hours ago"}
+                        {viewsCount}views • {`${formatDistanceToNow(new Date(createdAt))} ago`}
                     </Typography>
                 </Box>
             </Box>
