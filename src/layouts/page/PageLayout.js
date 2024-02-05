@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import Header from '../dashboard/header';
+import Nav from '../dashboard/nav';
 //
 
 // ----------------------------------------------------------------------
@@ -46,17 +47,16 @@ const StyledHeader = styled('header')(({ theme }) => ({
 export default function PageLayout() {
     const [open, setOpen] = useState(false);
 
-    const handleOpenNav = useCallback(() => {
-        setOpen(true);
-    }, []);
-
-    const handleCloseNav = useCallback(() => {
-        setOpen(false);
+    const handleToggleNav = useCallback(() => {
+        setOpen((prevOpen) => !prevOpen);
     }, []);
 
     return (
         <StyledRoot>
-            <Header onOpenNav={handleOpenNav} />
+            <Header onOpenNav={handleToggleNav} />
+
+            <Nav openNav={open} onCloseNav={handleToggleNav} />
+
             <Main>
                 <Outlet />
             </Main>
