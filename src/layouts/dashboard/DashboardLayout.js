@@ -35,10 +35,6 @@ const Main = styled('div')(({ theme }) => ({
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
 
-  const handleOpenNav = useCallback(() => {
-    setOpen(true);
-  }, []);
-
   const handleToggleNav = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
   }, []);
