@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
+import { useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Header from '../dashboard/header';
 import Nav from '../dashboard/nav';
@@ -51,11 +52,13 @@ export default function PageLayout() {
         setOpen((prevOpen) => !prevOpen);
     }, []);
 
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
     return (
         <StyledRoot>
             <Header onOpenNav={handleToggleNav} />
 
-            <Nav openNav={open} onCloseNav={handleToggleNav} />
+            {isMobile && <Nav openNav={open} onCloseNav={handleToggleNav} />}
 
             <Main>
                 <Outlet />
