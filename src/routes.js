@@ -28,13 +28,24 @@ export default function Router() {
         // { path: "products", element: <ProductsPage /> },
         // { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
         {
-          path: "video-upload", element: <ProtectedRoute> <VideoUploadPage /> </ProtectedRoute>
+          path: "video-upload",
+          element: (
+            <ProtectedRoute>
+              {" "}
+              <VideoUploadPage />{" "}
+            </ProtectedRoute>
+          ),
         },
       ],
     },
     {
       path: "login",
-      element: <PublicRoute> <LoginPage /></PublicRoute>,
+      element: (
+        <PublicRoute>
+          {" "}
+          <LoginPage />
+        </PublicRoute>
+      ),
     },
     {
       path: "/register",
@@ -54,9 +65,9 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         {
           path: "/watch/:videoId",
-          element: <VideoPlayerPage />
+          element: <VideoPlayerPage />,
         },
-      ]
+      ],
     },
     // {
     //   path: "*",
