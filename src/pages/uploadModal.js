@@ -13,7 +13,6 @@ import { styled } from "@mui/system";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
-import VideoForm from "./VideoForm";
 
 import {
   CloudUpload as CloudUploadIcon,
@@ -104,9 +103,7 @@ const validationSchema = yup.object({
 
 export const UploadModal = React.memo(({ open, onClose }) => {
   // const [uploading, setUploading] = useState(false); // State to track if upload is in progress
-  const InitalMetaData = useSelector((state) => state.videoData.videoMetadata);
-  const [showForm, setShowForm] = useState(false);
-  const { upload, uploading } = useUpload();
+  const { upload, uploading, setUploading } = useUpload();
 
   const user = useSelector((state) => state.auth.user);
   const userId = user ? user._id : null;
@@ -114,10 +111,11 @@ export const UploadModal = React.memo(({ open, onClose }) => {
   connectSocket(userId, dispatch);
 
   useEffect(() => {
-    if (uploading === false) {
+    if (!uploading) {
       onClose();
     }
-  }, [uploading, onClose]);
+    setUploading(true);
+  }, [uploading, onClose, setUploading]);
 
   const formik = useFormik({
     initialValues: {
@@ -269,7 +267,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
           </Typography>
         </UploadModalContainer>
       </Modal>
-      {showForm && <VideoForm id={InitalMetaData?._id} />}
     </>
   );
 });
