@@ -48,7 +48,7 @@ function ProgressModal({ name, status, progress, fileName }) {
               {`${Math.round(progress)}%`}
             </Typography>
           ) : (
-            <p>Uplooading......</p>
+            <p>Data Transferring......</p>
           )}
         </Box>
       </div>
