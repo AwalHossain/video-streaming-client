@@ -15,7 +15,7 @@ export function connectSocket(userId, dispatch) {
   console.log(userId, "userId from connectSocket");
   if (!userId) return;
   if (socket && socket.connected) return; // Add this line to prevent reconnecting every time the function is called
-  socket = io(`${process.env.REACT_APP_BASE_URL}?userId=${userId}`, {
+  socket = io(`${import.meta.env.VITE_REACT_APP_BASE_URL}?userId=${userId}`, {
     reconnectionAttempts: 7,
   });
 

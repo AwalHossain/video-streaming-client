@@ -1,10 +1,11 @@
 import { Navigate, useRoutes } from "react-router-dom";
 // layouts
-import DashboardLayout from "./layouts/dashboard";
+
 import SimpleLayout from "./layouts/simple";
 //
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import DashboardLayout from "./layouts/dashboard/DashboardLayout";
 import PageLayout from "./layouts/page/PageLayout";
 import DashboardAppPage from "./pages/DashboardAppPage";
 import LoginPage from "./pages/LoginPage";
