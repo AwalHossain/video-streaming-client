@@ -1,5 +1,6 @@
-import { ThumbUp } from "@mui/icons-material";
+import { ThumbUpOffAltOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
+import "./description.css";
 
 export default function Description({ video }) {
   const { title, description, date } = video;
@@ -16,31 +17,11 @@ export default function Description({ video }) {
       >
         {title}
       </Typography>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid #e2e8f0",
-          paddingBottom: "1rem",
-        }}
-      >
-        <button
-          style={{
-            backgroundColor: "blue",
-            color: "white",
-            border: "none",
-            padding: "0.5rem 1rem",
-            borderRadius: "0.25rem",
-            cursor: "pointer",
-            fontSize: "1rem",
-          }}
-        >
-          Subscribe
-        </button>
+      <div className="subs-container">
+        <button className="subs-btn">Subscribe</button>
         <div>
-          <ThumbUp />
-          Like
+          <ThumbUpOffAltOutlined />
+          {/* <Typography style={{ marginLeft: "0.5rem" }}>10K likes</Typography> */}
         </div>
       </div>
       <div
