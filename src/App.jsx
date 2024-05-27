@@ -8,7 +8,8 @@ import Router from "./routes";
 import ThemeProvider from "./theme";
 
 import { useSelector } from "react-redux";
-import ProgressModals from "./components/modal/ProgressModals";
+
+import ProgressModalContainer from "./components/modal/ProgressModalContainer";
 import ScrollToTop from "./components/scroll-to-top";
 import Loading from "./components/ui/Loading";
 import { ProgressProvider } from "./contexts/ProgressContext";
@@ -43,7 +44,7 @@ export default function App() {
       <Stack>
         <NotificationBar />
         <ProgressProvider>
-          <ProgressModals />
+          <ProgressModalContainer />
         </ProgressProvider>
       </Stack>
     </ThemeProvider>
