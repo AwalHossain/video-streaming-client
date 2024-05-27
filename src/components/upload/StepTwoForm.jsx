@@ -17,9 +17,9 @@ const StepTwo = ({ formik }) => (
                     error={Boolean(formik.errors.visibility)}
                     fullWidth
                 >
-                    <MenuItem value="public">Public</MenuItem>
-                    <MenuItem value="private">Private</MenuItem>
-                    <MenuItem value="unlisted">Unlisted</MenuItem>
+                    <MenuItem value="Public">Public</MenuItem>
+                    <MenuItem value="Private">Private</MenuItem>
+                    <MenuItem value="Unlisted">Unlisted</MenuItem>
                 </Select>
             </FormControl>
         </Grid>
