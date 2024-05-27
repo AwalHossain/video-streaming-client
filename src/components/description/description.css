@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   margin: 1rem 0;
 }
 .description {
@@ -25,20 +25,35 @@
   background: red;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   border-radius: 20px;
+  height: 40px;
+  width: 130px;
   cursor: pointer;
   font-size: 1rem;
   text-align: center;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.notification {
+  text-align: center;
+  display: flex;
   justify-content: space-between;
   align-items: center;
+  /* padding: 0.8rem 1rem; */
+  padding: 0;
 }
 
 .sub {
   display: inline-block;
-  font-weight: bold;
 }
 .bell {
   display: inline-block;
+}
+
+.like {
+  cursor: pointer;
 }
