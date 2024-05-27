@@ -2,6 +2,8 @@ import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import App from "./App";
 import { store } from "./redux/store";
 
@@ -13,13 +15,16 @@ import * as serviceWorker from "./serviceWorker";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
+  <>
   <Provider store={store}>
     <HelmetProvider>
       <BrowserRouter>
+    <ToastContainer />
         <App />
       </BrowserRouter>
     </HelmetProvider>
   </Provider>
+  </>
 );
 
 // If you want to enable client cache, register instead.
