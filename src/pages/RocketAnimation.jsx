@@ -1,4 +1,4 @@
-import React from 'react';
+
 import './animat.css'; // Import the CSS file for rocket animation
 
 function RocketAnimation() {
