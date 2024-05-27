@@ -1,10 +1,3 @@
-
-image 
-
-
-
-
-
 # 🎥 MERN Video Streaming Platform 🎥 (ONGOING)
 
 
