@@ -11,7 +11,7 @@ import DashboardAppPage from "./pages/DashboardAppPage";
 import LoginPage from "./pages/LoginPage";
 import Page404 from "./pages/Page404";
 import SignupPage from "./pages/SignupPage";
-import ContentPage from "./pages/UserPage";
+import UserContent from "./pages/UserContent";
 import VideoPlayerPage from "./pages/VideoPlayerPage";
 import VideoUploadPage from "./pages/VideoUploadPage";
 
@@ -25,15 +25,14 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: "app", element: <DashboardAppPage /> },
-        { path: "content", element: <ContentPage /> },
+        { path: "content", element: <UserContent /> },
         // { path: "products", element: <ProductsPage /> },
         // { path: "blog", element: <ProtectedRoute><BlogPage /> </ProtectedRoute> },
         {
           path: "video-upload",
           element: (
             <ProtectedRoute>
-              {" "}
-              <VideoUploadPage />{" "}
+              <VideoUploadPage />
             </ProtectedRoute>
           ),
         },
@@ -43,7 +42,6 @@ export default function Router() {
       path: "login",
       element: (
         <PublicRoute>
-          {" "}
           <LoginPage />
         </PublicRoute>
       ),
