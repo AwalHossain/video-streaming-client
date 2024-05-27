@@ -1,6 +1,6 @@
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { Box, Button, Grid, SvgIcon, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from 'react-redux';
 import { resetFilters } from '../../redux/features/filter/filterSlice';
@@ -9,24 +9,16 @@ import VideoGridItem from './VideoGridItem';
 
 const VideoGrid = () => {
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(20);
     const [items, setItems] = useState([]);
     const [hasMore, setHasMore] = useState(true);
-    const [index, setIndex] = useState(2);
-    const handlePageChange = (newPage) => {
-        setPage(newPage)
-    }
 
-    const { search, filter, sort, tags } = useSelector((state) => state.filter);
 
-    const handlePageSizeChange = (newPageSize) => {
-        setPage(1);
-        setPageSize(newPageSize)
-    }
+    const { search, sort, tags } = useSelector((state) => state.filter);
+
+
 
     const params = {
         page: page,
-        pageSize: pageSize,
         sortBy: 'createdAt',
         sortOrder: sort,
         searchTerm: search,
