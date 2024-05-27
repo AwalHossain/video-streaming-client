@@ -1,3 +1,4 @@
+
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container, Divider, Typography } from '@mui/material';
@@ -5,7 +6,7 @@ import { styled } from '@mui/material/styles';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../components/logo';
 import GoogleLogin from '../sections/auth/GoogleLogin';
 import LoginForm from '../sections/auth/LoginForm';
@@ -44,7 +45,6 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
   const locaiton = useLocation();
-  const navigate = useNavigate();
 
   const { from } = locaiton.state || { from: { pathname: '/dashboard' } };
 
