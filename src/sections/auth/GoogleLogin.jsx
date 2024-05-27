@@ -21,10 +21,10 @@ export default function GoogleLogin({ from, text }) {
         const top = window.innerHeight / 2 - height / 2;
 
         loginWindow = window.open(
-            `${process.env.REACT_APP_BASE_URL}/api/v1/auth/google`,
+            `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/auth/google`,
             '_blank',
             `width=${width},height=${height},top=${top},left=${left}`
-        );
+        );    
     }
     useEffect(() => {
         const handleFocus = () => {
@@ -41,7 +41,7 @@ export default function GoogleLogin({ from, text }) {
     }, [loginWindow]);
     useEffect(() => {
         const handleMessage = (event) => {
-            if (event.origin !== process.env.REACT_APP_BASE_URL) return;
+            if (event.origin !== import.meta.env.VITE_REACT_APP_BASE_URL) return;
             // Handle server response
             const { data } = event.data;
 
