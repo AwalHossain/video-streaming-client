@@ -11,21 +11,29 @@ export default function GoogleLogin({ from, text }) {
     let loginWindow;
     const navigate = useNavigate();
 
-
-
-    const handleGoogle = () => {
-        setLoading(true);
+    const handleGoogleLogin = () => {
         const width = 500;
         const height = 600;
-        const left = window.innerWidth / 2 - width / 2;
-        const top = window.innerHeight / 2 - height / 2;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
 
-        loginWindow = window.open(
-            `${process.env.REACT_APP_BASE_URL}/api/v1/auth/google`,
-            '_blank',
-            `width=${width},height=${height},top=${top},left=${left}`
+        const googleLoginWindow = window.open(
+            `${import.meta.env.VITE_BASE_URL}/api/v1/auth/google`,
+            "Google Login",
+            `width=${width},height=${height},left=${left},top=${top}`
         );
-    }
+
+        window.addEventListener("message", (event) => {
+            if (event.origin !== import.meta.env.VITE_BASE_URL) return;
+
+            if (event.data.token) {
+                localStorage.setItem("accessToken", `Bearer ${event.data.token}`);
+                googleLoginWindow.close();
+                window.location.href = "/dashboard";
+            }
+        });
+    };
+
     useEffect(() => {
         const handleFocus = () => {
             if (loginWindow && loginWindow.closed) {
@@ -77,7 +85,7 @@ export default function GoogleLogin({ from, text }) {
             fullWidth
             size="large"
             variant="outlined"
-            onClick={handleGoogle}
+            onClick={handleGoogleLogin}
             disabled={loading}
             sx={{
                 display: 'flex',

@@ -22,73 +22,20 @@ export const NOTIFY_EVENTS = {
 
 
 
-export const VIDEO_TAGS = [
-    {
-        name: "Comedy",
-        id: 1
-    },
-    {
-        name: "Fitness",
-        id: 2
-    },
-    {
-        name: "Food",
-        id: 3
-    },
-    {
-        name: "Gaming",
-        id: 4
-    },
-    {
-        name: "Music",
-        id: 5
-    },
-    {
-        name: "Sports",
-        id: 6
-    },
-    {
-        name: "Technology",
-        id: 7
-    },
-    {
-        name: "Travel",
-        id: 8
-    },
-    {
-        name: "Vlog",
-        id: 9
-    },
-    {
-        name: "Education",
-        id: 10
-    },
-    {
-        name: "Motivational",
-        id: 11
-    },
-    {
-        name: "Lifestyle",
-        id: 12
-    },
-    {
-        name: "Fashion",
-        id: 13
-    },
-    {
-        name: "Science",
-        id: 14
-    },
-    {
-        name: "Health",
-        id: 15
-    },
-    {
-        name: "Business",
-        id: 16
-    },
-    {
-        name: "Entertainment",
-        id: 17
-    },
+export const VIDEO_TAGS  = [
+    { name: "YouTube", id: 1 },
+    { name: "Vlog", id: 2 },
+    { name: "Tutorial", id: 3 },
+    { name: "Music", id: 4 },
+    { name: "Funny", id: 5 },
+    { name: "DIY", id: 6 },
+    { name: "Travel", id: 7 },
+    { name: "Nature", id: 8 },
+    { name: "Gaming", id: 9 },
+    { name: "Food", id: 10 },
+    { name: "Beauty", id: 11 },
+    { name: "Fashion", id: 12 },
+    { name: "LifeHacks", id: 13 },
+    { name: "Motivation", id: 14 },
+    { name: "Education", id: 15 }
 ];
