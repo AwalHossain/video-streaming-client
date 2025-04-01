@@ -8,10 +8,8 @@ import {
   MediaProvider,
   Poster,
 } from "@vidstack/react";
-import {
-  defaultLayoutIcons,
-  DefaultVideoLayout,
-} from "@vidstack/react/player/layouts/default";
+import { PlyrLayout, plyrLayoutIcons } from '@vidstack/react/player/layouts/plyr';
+
 
 export default function Player({ link, thumbnailUrl }) {
   let player = useRef(null);
@@ -50,15 +48,15 @@ export default function Player({ link, thumbnailUrl }) {
       >
         <MediaProvider>
           <Poster
-            className="vds-poster"
+            className="media-poster"
             src={thumbnailUrl}
             alt="Girl walks into campfire with gnomes surrounding her friend ready for their next meal!"
           />
         </MediaProvider>
 
         {/* Layouts */}
-        <DefaultVideoLayout
-          icons={defaultLayoutIcons}
+        <PlyrLayout
+          icons={plyrLayoutIcons}
           thumbnails={{ thumbnailUrl }}
         />
       </MediaPlayer>
