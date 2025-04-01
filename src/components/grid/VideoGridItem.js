@@ -1,6 +1,5 @@
 import { Avatar, Box, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const VideoGridItem = ({ video, isLoading, isFetching }) => {
@@ -9,8 +8,6 @@ const VideoGridItem = ({ video, isLoading, isFetching }) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const largeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-
     return (
         isLoading || isFetching ? (
             <Box sx={{ width: "100%", height: "100%", my: 1 }}>
@@ -51,7 +48,7 @@ const VideoGridItem = ({ video, isLoading, isFetching }) => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                             <Typography variant="body1">{title}</Typography>
                             <Typography variant="caption" color="text.secondary">
-                                {author.name}
+                                {author?.name ?? 'Unknown Author'}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                                 {`${viewsCount} views • ${formatDistanceToNow(new Date(createdAt))} ago`}
