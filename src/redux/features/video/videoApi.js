@@ -129,10 +129,17 @@ export const videoApi = apiSlice.injectEndpoints(
                 }),
                 providesTags: ['Tag'],
             }),
+            deleteVideo: builder.mutation({
+                query: (id) => ({
+                    url: `/videos/${id}`,
+                    method: "DELETE",
+                }),
+                invalidatesTags: ['Video'],
+            }),
         }),
     }
 );
 
 export const { useGetVideoMetaDataQuery, useUpdateVideoMetaDataMutation, useGetAllVideosQuery, useGetVideoByIdQuery,
-    useGetAllTagsQuery, useGetMyVideosQuery
+    useGetAllTagsQuery, useGetMyVideosQuery, useDeleteVideoMutation
 } = videoApi;
