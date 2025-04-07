@@ -1,6 +1,8 @@
-@import '@vidstack/react/player/styles/default/theme.css';
-@import '@vidstack/react/player/styles/default/layouts/audio.css';
-@import '@vidstack/react/player/styles/default/layouts/video.css';
+/* @import '@vidstack/react/player/styles/default/theme.css'; */
+/* @import '@vidstack/react/player/styles/default/layouts/audio.css';
+@import '@vidstack/react/player/styles/default/layouts/video.css'; */
+@import '@vidstack/react/player/styles/base.css';
+@import '@vidstack/react/player/styles/plyr/theme.css';
 
 .player {
   --brand-color: #f5f5f5;
@@ -33,3 +35,132 @@
   margin-inline: auto;
   max-width: 300px;
 } */
+
+/* Video player container */
+.video-player-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Video player */
+.video-player {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
+/* Custom controls */
+.custom-controls {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  z-index: 10;
+}
+
+/* Quality control */
+.quality-control {
+  position: relative;
+}
+
+/* Quality button */
+.quality-button {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.quality-button:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Quality menu */
+.quality-menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  min-width: 120px;
+}
+
+/* Quality option */
+.quality-option {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quality-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.quality-option.active {
+  background-color: rgba(78, 156, 246, 0.3);
+  color: #4e9cf6;
+}
+
+/* Hide native video controls when hovering over custom controls */
+.video-player-container:hover .video-player::-webkit-media-controls {
+  opacity: 0.7;
+}
+
+/* Plyr container styles */
+.plyr-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Plyr theme overrides */
+.plyr--video {
+  --plyr-color-main: #4e9cf6;
+  --plyr-video-background: #000;
+  --plyr-menu-background: rgba(28, 28, 28, 0.9);
+  --plyr-menu-color: #fff;
+  --plyr-menu-border-radius: 4px;
+  --plyr-menu-item-color: #fff;
+  --plyr-menu-item-hover-background: rgba(255, 255, 255, 0.1);
+  --plyr-menu-item-hover-color: #fff;
+  --plyr-menu-item-selected-color: #4e9cf6;
+  --plyr-menu-item-selected-background: rgba(78, 156, 246, 0.1);
+}
+
+/* Make the player responsive */
+.plyr-container video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+/* Improve quality selector visibility */
+.plyr__menu__container .plyr__control[role="menuitemradio"] {
+  padding: 8px 12px;
+}
+
+/* Highlight the selected quality option */
+.plyr__control--pressed {
+  background-color: var(--plyr-color-main) !important;
+}
