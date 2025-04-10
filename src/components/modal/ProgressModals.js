@@ -1,12 +1,28 @@
 import { Stack } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useProgress } from '../../contexts/ProgressContext';
+import { resetAllProcesses } from '../../redux/features/socket/socketSlice';
 import ProgressModal from './ProgresModal';
 
 const ProgressModals = () => {
     const { process } = useProgress();
-    const isConnected = useSelector(state => state.socket.resetProcess);
-    console.log(process, 'isConnected from ProgressModals,', isConnected, 'isConnected from ProgressModals', !isConnected);
+    const socketConnected = useSelector(state => state.socket.isConnected);
+    const wsResponse = useSelector(state => state.socket.wsResponse);
+    const dispatch = useDispatch();
+    
+    // Force close all modals if video is published or socket disconnects
+    useEffect(() => {
+        if (!socketConnected || (wsResponse && wsResponse.name === "Video published")) {
+            dispatch(resetAllProcesses(false));
+        }
+    }, [socketConnected, wsResponse, dispatch]);
+    
+    // If socket is disconnected, don't render anything
+    if (!socketConnected) {
+        return null;
+    }
+
     return (
         <Stack
             direction="column"
@@ -20,29 +36,22 @@ const ProgressModals = () => {
                 zIndex: 9999,
             }}
         >
-            {Object.entries(process).map(([videoId, videoProcess]) =>
-                Object.entries(videoProcess).map(
-                    ([name, process]) =>
-                        //     if (process.status === "processing" && Object.keys(isConnected).length === 0) {
-                        //         console.log('ProgressModals', process);
-                        //         // ...
-                        //     }
-                        // }
-                        (process.status === "processing" && !isConnected) && (
-                            <ProgressModal
-                                key={`${videoId}-${name}`}
-                                name={name}
-                                fileName={process.fileName}
-                                status={process.status}
-                                progress={process.progress}
-                            />
-
-                        )
+            {/* Only render active processes with simple flatMap approach */}
+            {Object.entries(process).flatMap(([fileName, processMap]) => 
+                Object.entries(processMap).map(([name, data]) => 
+                    data.status === 'uploading' || data.status === 'processing' ? (
+                        <ProgressModal
+                            key={`${fileName}-${name}`}
+                            name={data.name}
+                            fileName={data.fileName}
+                            status={data.status}
+                            progress={data.progress}
+                        />
+                    ) : null
                 )
-            )}
+            ).filter(Boolean)}
         </Stack>
     );
 };
-
 
 export default ProgressModals;
