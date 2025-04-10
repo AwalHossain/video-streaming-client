@@ -10,6 +10,7 @@ import DashboardAppPage from "./pages/DashboardAppPage";
 import LoginPage from "./pages/LoginPage";
 import Page404 from "./pages/Page404";
 import SignupPage from "./pages/SignupPage";
+import UpdateVideoDetails from "./pages/UpdateVideoDetails";
 import ContentPage from "./pages/UserPage";
 import VideoPlayerPage from "./pages/VideoPlayerPage";
 import VideoUploadPage from "./pages/VideoUploadPage";
@@ -58,6 +59,15 @@ export default function Router() {
         },
       ]
     },
+    {
+      element: <PageLayout />,
+      children: [
+        {
+          path: "/update-video/:videoId",
+          element: <UpdateVideoDetails />
+        }
+      ]
+    }
     // {
     //   path: "*",
     //   element: <Navigate to="/404" replace />,
