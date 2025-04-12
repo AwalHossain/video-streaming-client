@@ -167,8 +167,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
         },
     });
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(null);
-
     // Function to reset the upload state
     const handleRetry = () => {
         setIsUploading(false);
