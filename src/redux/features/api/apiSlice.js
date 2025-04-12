@@ -4,7 +4,7 @@ import REACT_APP_API_URL from '../../../utils/apiUrl'
 import { TAG_TYPES } from './tagTypes'
 
 
-console.log(process.env.REACT_APP_BASE_URL, 'check')
+console.log(import.meta.env.VITE_BASE_URL, 'check base url')
 export const apiSlice = createApi({
     name: 'api',
     reducerPath: 'api',
