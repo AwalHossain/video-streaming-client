@@ -56,6 +56,50 @@ This will start the frontend services.
 npm run dev
 ```
 
+## Running the Vite App
+
+This project has been migrated from Create React App to Vite for faster development experience.
+
+### Development
+
+To start the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The app will be available at http://localhost:3000
+
+### Building for Production
+
+To build the app for production:
+
+```bash
+npm run build
+# or
+yarn build
+```
+
+The build output will be in the `build` directory.
+
+### Preview Production Build
+
+To preview the production build locally:
+
+```bash
+npm run preview
+# or
+yarn preview
+```
+
+## Benefits of Vite
+
+- **Faster Development Server**: Vite provides an extremely fast development server with instant hot module replacement (HMR).
+- **Optimized Builds**: Vite uses Rollup for production builds, resulting in highly optimized bundles.
+- **Modern Development Experience**: Vite is built with modern JavaScript in mind, providing a better developer experience.
+
 ## 🤝 Contributing to MERN Video Streaming
 
 MERN Video Streaming is an open-source project and we welcome contributions from
