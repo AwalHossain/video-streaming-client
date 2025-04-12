@@ -52,7 +52,7 @@ export default function SignupPage() {
                             Sign Up in to Reely
                         </Typography>
 
-                        <GoogleLogin from={from} />
+                        <GoogleLogin from={from} text={"Sign up with Google"} />
 
                         <Divider sx={{ my: 3 }}>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
