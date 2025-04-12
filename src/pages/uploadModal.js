@@ -13,17 +13,16 @@ import { styled } from '@mui/system';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
-import VideoForm from './VideoForm';
 
 
 import {
     CloudUpload as CloudUploadIcon,
-    PictureInPicture as ImageIcon,
     VideoLibrary as VideoLibraryIcon
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useUpload } from '../components/upload/handleUplodadProgress';
-import { connectSocket } from '../redux/features/socket/socketApi';
+import { connectSocket, disconnectSocket } from '../redux/features/socket/socketApi';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -73,10 +72,6 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 
 
 
-
-
-
-
 const validationSchema = yup.object({
     video: yup.mixed().test(
         'fileFormat',
@@ -100,22 +95,49 @@ const validationSchema = yup.object({
 
 
 export const UploadModal = React.memo(({ open, onClose }) => {
-    // const [uploading, setUploading] = useState(false); // State to track if upload is in progress
-    const InitalMetaData = useSelector(state => state.videoData.videoMetadata);
-    const [showForm, setShowForm] = useState(false);
-    const { upload, uploading, data } = useUpload();
+    const { upload } = useUpload();
+    const navigate = useNavigate();
+    const wsResponse = useSelector(state => state.socket.wsResponse);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadTimeout, setUploadTimeout] = useState(null);
+    const [uploadError, setUploadError] = useState(null);
+
+    console.log(wsResponse, 'wsResponse for upload modal');
 
     const user = useSelector((state) => state.auth.user);
     const userId = user ? user._id : null;
     const dispatch = useDispatch();
-    connectSocket(userId, dispatch);
+
+    // Connect socket
+    useEffect(() => {
+        if (userId) {
+            connectSocket(userId, dispatch);
+        }
+        // Clean up on unmount
+        return () => {
+            disconnectSocket();
+            if (uploadTimeout) {
+                clearTimeout(uploadTimeout);
+            }
+        }
+    }, [userId, dispatch, uploadTimeout]);
+
 
     useEffect(() => {
-        if (InitalMetaData?.originalName) {
-            setShowForm(true);
+        // Check if wsResponse has the _id and fileName/originalName that indicates metadata saved
+        if (wsResponse && wsResponse._id && (wsResponse.fileName || wsResponse.originalName)) {
+            console.log('Received video metadata, navigating to update page.');
+            setIsUploading(false);
+            setUploadError(null);
+            // Clear timeout if it exists
+            if (uploadTimeout) {
+                clearTimeout(uploadTimeout);
+                setUploadTimeout(null);
+            }
+            navigate(`/update-video/${wsResponse._id}`);
             onClose();
         }
-    }, [InitalMetaData, onClose]);
+    }, [wsResponse, navigate, onClose, uploadTimeout]);
 
     const formik = useFormik({
         initialValues: {
@@ -124,11 +146,38 @@ export const UploadModal = React.memo(({ open, onClose }) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            const data = await upload(values);
+            setIsUploading(true);
+            setUploadError(null);
+            
+            try {
+                await upload(values);
+                
+                // Set a timeout to reset upload state if no response after 30 seconds
+                const timeout = setTimeout(() => {
+                    setIsUploading(false);
+                    setUploadError('Upload timeout. Please try again.');
+                }, 30000); // 30 seconds timeout
+                
+                setUploadTimeout(timeout);
+            } catch (error) {
+                console.error('Upload error:', error);
+                setIsUploading(false);
+                setUploadError('Failed to upload video. Please try again.');
+            }
         },
     });
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+
+    // Function to reset the upload state
+    const handleRetry = () => {
+        setIsUploading(false);
+        setUploadError(null);
+        if (uploadTimeout) {
+            clearTimeout(uploadTimeout);
+            setUploadTimeout(null);
+        }
+    };
 
     console.log('rendering upload modal checking');
     return (
@@ -154,7 +203,12 @@ export const UploadModal = React.memo(({ open, onClose }) => {
 
                                     <Grid item xs={12} sm={12}>
                                         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                                            <Button 
+                                                component="label" 
+                                                variant="contained" 
+                                                startIcon={<CloudUploadIcon />}
+                                                disabled={isUploading}
+                                            >
                                                 Upload Video (50MB Max)
                                                 <VisuallyHiddenInput
                                                     name='video'
@@ -164,8 +218,9 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                                                     onChange={(e) => {
                                                         const file = e.currentTarget.files[0];
                                                         formik.setFieldValue('video', file);
-                                                        setSelectedVideo(file.name);
+                                                        setSelectedVideo(file?.name || null);
                                                     }}
+                                                    disabled={isUploading}
                                                 />
                                             </Button>
                                             {
@@ -183,41 +238,67 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                                     </Grid>
 
                                     <Grid item xs={12} sm={12}>
-                                        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                                                Upload WaterMark Image (optional)
-                                                <VisuallyHiddenInput
-                                                    name='image'
-                                                    accept='image/*'
-                                                    id='image'
-                                                    type='file'
-                                                    onChange={(e) => {
-                                                        const file = e.currentTarget.files[0];
-                                                        formik.setFieldValue('image', file);
-                                                        setSelectedImage(file.name);
+                                        {uploadError && (
+                                            <Typography 
+                                                variant="body2" 
+                                                component="div" 
+                                                sx={{ color: 'error.main', mt: 1, mb: 1 }}
+                                            >
+                                                {uploadError}
+                                                <Button 
+                                                    variant="text" 
+                                                    color="primary" 
+                                                    size="small"
+                                                    onClick={handleRetry}
+                                                    sx={{ ml: 2 }}
+                                                >
+                                                    Retry
+                                                </Button>
+                                            </Typography>
+                                        )}
+                                        
+                                        <Button 
+                                            type="submit" 
+                                            variant="contained" 
+                                            color="primary" 
+                                            style={{
+                                                margin: '20px 0',
+                                            }} 
+                                            sx={{ 
+                                                m: 1,
+                                                position: 'relative',
+                                                '&.Mui-disabled': {
+                                                    bgcolor: isUploading ? 'rgba(25, 118, 210, 0.3)' : undefined,
+                                                }
+                                            }}
+                                            disabled={formik.isSubmitting || !formik.values.video || isUploading}
+                                        >
+                                            {isUploading ? 'Uploading...' : 'Submit'}
+                                            {/* {isUploading && (
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        right: 10,
+                                                        transform: 'translateY(-50%)',
+                                                        display: 'inline-block',
+                                                        width: 18,
+                                                        height: 18,
+                                                        borderRadius: '50%',
+                                                        border: '2px solid white',
+                                                        borderTopColor: 'transparent',
+                                                        animation: 'spin 1s linear infinite',
+                                                        '@keyframes spin': {
+                                                            '0%': {
+                                                                transform: 'rotate(0deg)',
+                                                            },
+                                                            '100%': {
+                                                                transform: 'rotate(360deg)',
+                                                            },
+                                                        },
                                                     }}
                                                 />
-                                            </Button>
-                                            {/* formik err */}
-                                            {
-                                                formik.touched.image && formik.errors.image ? (
-                                                    <Typography variant="body2" component="div" sx={{ color: 'red' }}>
-                                                        {formik.errors.image}
-                                                    </Typography>
-                                                ) : null
-                                            }
-                                            {selectedImage && <Box display="flex" alignItems="center">
-                                                <ImageIcon />
-                                                <Typography>{selectedImage}</Typography>
-                                            </Box>} {/* Display the file name */}
-
-                                        </FormControl>
-                                        <Button type="submit" variant="contained" color="primary" style={{
-                                            margin: '20px 0',
-                                        }} sx={{ m: 1 }}
-                                            disabled={formik.isSubmitting || !formik.values.video}
-                                        >
-                                            Submit
+                                            )} */}
                                         </Button>
                                     </Grid>
 
@@ -230,7 +311,7 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                     </div>
                     <Typography variant="body2" component="p">
                         By submitting your videos to YouTube, you acknowledge that you agree
-                        to YouTube's{' '}
+                        to Reely's{' '}
                         <a
                             href="https://www.reely.tech/"
                             target="_blank"
@@ -250,30 +331,6 @@ export const UploadModal = React.memo(({ open, onClose }) => {
                     </Typography>
                 </UploadModalContainer>
             </Modal>
-            {
-                showForm && <VideoForm id={InitalMetaData?._id} />
-            }
         </>
     );
 });
-
-// {
-//     uploading ? (
-//         <div>
-//             {/* Display rocket animation or loading indicator here */}
-//             <Typography variant="body2" component="div">
-//                 <div style={{ height: 300, width: 300 }}>
-//                     Uploading...
-//                     <Lottie
-//                         animationData={rocket}
-//                         onAnimationEnd={() => console.log('Animation End!')}
-//                         onComplete={handleAnimationComplete}
-//                         loop={false} // Set to true for the animation to rep
-//                         speed={2.5} // Set the speed of the animation
-//                         segments={[0, 20]} // Set the start and end frames of the animation
-//                     />
-//                 </div> {/* Replace with your animation component */}
-//             </Typography>
-//         </div>
-//     ) : (
-
