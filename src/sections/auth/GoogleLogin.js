@@ -49,7 +49,7 @@ export default function GoogleLogin({ from, text }) {
     }, [loginWindow]);
     useEffect(() => {
         const handleMessage = (event) => {
-            if (event.origin !== process.env.REACT_APP_BASE_URL) return;
+            if (event.origin !== import.meta.env.VITE_BASE_URL) return;
             // Handle server response
             const { data } = event.data;
 
@@ -105,7 +105,7 @@ export default function GoogleLogin({ from, text }) {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginRight: 1 }}>
                 <Iconify icon="eva:google-fill" width={22} height={22} />
             </Box>
-            {text} with Google
+            {text}
         </Button>
     );
 }
