@@ -1,0 +1,59 @@
+.subs-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  /* border: 1px solid red; */
+  margin: 1rem 0;
+}
+.description {
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+}
+.title {
+  font-weight: bold;
+  letter-spacing: tight;
+  color: #2d3748;
+  padding-bottom: 1rem;
+  margin: 10px 0;
+}
+
+.subs-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 20px;
+  height: 40px;
+  width: 130px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.notification {
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 0.8rem 1rem; */
+  padding: 0;
+}
+
+.sub {
+  display: inline-block;
+}
+.bell {
+  display: inline-block;
+}
+
+.like {
+  cursor: pointer;
+}
