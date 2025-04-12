@@ -68,15 +68,21 @@ const VideoGrid = () => {
     }, [tags]);
 
     useEffect(() => {
-        if (page === 1) {
-            setItems(data?.data || []);
-        } else if (data?.data?.length) {
-            const newItems = data.data.filter(
-                (item) => !items.some((prevItem) => prevItem._id === item._id)
-            );
-            setItems(prevItems => [...prevItems, ...newItems]);
+        if (data?.data) {
+            if (page === 1) {
+                setItems(data.data);
+            } else {
+                setItems(prevItems => {
+                    const existingIds = new Set(prevItems.map(item => item._id));
+                    const newUniqueItems = data.data.filter(item => !existingIds.has(item._id));
+                    if (newUniqueItems.length > 0) {
+                        return [...prevItems, ...newUniqueItems];
+                    }
+                    return prevItems;
+                });
+            }
         }
-    }, [data, page, items]);
+    }, [data, page]);
 
     let content;
 
