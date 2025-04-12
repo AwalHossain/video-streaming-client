@@ -11,6 +11,9 @@ import { disconnectSocket } from '../../../redux/features/socket/socketApi';
 
 export default function AccountPopover({ user }) {
 
+  // Add console log here to check the user prop
+  console.log("AccountPopover received user:", user);
+
   const [open, setOpen] = useState(null);
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -71,15 +74,11 @@ export default function AccountPopover({ user }) {
           }),
         }}
       >
-        <Avatar>
-          {user?.avatar
-            ? <img src={user.avatar} alt="user avatar" />
-            : user?.name
-              ? user.name[0].toUpperCase()
-              : (
-                <Avatar src={"GGGGGGGGGGGGGGGGG"} alt="photoURL" />
-              )
-          }
+        <Avatar 
+          src={user?.avatar} 
+          alt={user?.name || 'User Avatar'}
+        >
+          {user && !user.avatar && user.name ? user.name[0].toUpperCase() : null}
         </Avatar>
       </IconButton>
 
