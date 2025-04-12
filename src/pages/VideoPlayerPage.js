@@ -1,5 +1,4 @@
-import { Box, Grid } from "@mui/material";
-import React from "react";
+import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import Description from "../components/description/Description";
 import Player from "../components/description/Player";
@@ -14,8 +13,6 @@ const VideoPlayerPage = () => {
     isLoading,
     isError,
     error,
-    videoLink,
-    status,
   } = useGetVideoByIdQuery(videoId);
 
   const data = videoData?.data;
@@ -23,38 +20,98 @@ const VideoPlayerPage = () => {
   let content;
 
   if (isLoading) {
-    content = <Loading />;
+    content = (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <Loading />
+      </Box>
+    );
   }
 
   if (!isError && !isLoading && !data?._id) {
-    content = <Box sx={{ gridColumn: "span 12" }}>No video found</Box>;
+    content = (
+      <Box sx={{ 
+        gridColumn: "span 12", 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '50vh' 
+      }}>
+        <Typography variant="h5" color="text.secondary">
+          Video not found
+        </Typography>
+      </Box>
+    );
   }
 
   if (isError) {
-    content = <Box sx={{ gridColumn: "span 12" }}>{error}</Box>;
+    content = (
+      <Box sx={{ 
+        gridColumn: "span 12", 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '50vh',
+        color: 'error.main'
+      }}>
+        <Typography variant="h5">
+          {error?.data?.message || "An error occurred"}
+        </Typography>
+      </Box>
+    );
   }
 
   if (!isError && data?._id) {
     content = (
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12} lg={8}>
-          <Player link={data?.videoLink} thumbnailUrl={data.thumbnailUrl} />
-          <Description video={data} />
+          <Box sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <Player link={data?.videoLink} thumbnailUrl={data.thumbnailUrl} />
+          </Box>
+          <Paper elevation={0} sx={{ mt: 2, borderRadius: '12px' }}>
+            <Description video={data} />
+          </Paper>
         </Grid>
         <Grid item xs={12} lg={4}>
-          <RelatedVideo tags={data?.tags} />
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 500, 
+              mb: 2, 
+              pl: 1 
+            }}
+          >
+            Related Videos
+          </Typography>
+          <Box 
+            sx={{ 
+              borderRadius: '12px', 
+              overflow: 'hidden',
+            }}
+          >
+            <RelatedVideo tags={data?.tags} />
+          </Box>
         </Grid>
       </Grid>
     );
   }
 
   return (
-    <Box sx={{ pt: 2, pb: 20 }}>
-      <Box
-        sx={{ mx: "auto", maxWidth: "7xl", px: 2, pb: 20, maxHeight: "400px" }}
+    <Box 
+      sx={{ 
+        pt: 3, 
+        pb: 6, 
+        bgcolor: '#f9f9f9', 
+        minHeight: '100vh'
+      }}
+    >
+      <Container 
+        maxWidth="xl" 
+        sx={{ 
+          px: { xs: 1, sm: 2, md: 3 } 
+        }}
       >
         {content}
-      </Box>
+      </Container>
     </Box>
   );
 };
