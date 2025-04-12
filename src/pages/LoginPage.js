@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Divider, Typography } from '@mui/material';
+import { Container, Divider, Link as MuiLink, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../components/logo';
 import GoogleLogin from '../sections/auth/GoogleLogin';
 import LoginForm from '../sections/auth/LoginForm';
@@ -44,7 +44,6 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
   const locaiton = useLocation();
-  const navigate = useNavigate();
 
   const { from } = locaiton.state || { from: { pathname: '/dashboard' } };
 
@@ -88,20 +87,20 @@ export default function LoginPage() {
               Sign in to Reely
             </Typography>
 
-            <GoogleLogin from={from} text={"Login"} />
+            <Typography variant="body2" sx={{ mb: 4, textAlign: 'center' }}>
+              Don&apos;t have an account?{' '}
+              <MuiLink component={Link} to='/register' variant="subtitle2">
+                Get started
+              </MuiLink>
+            </Typography>
 
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                OR
-              </Typography>
+            <GoogleLogin from={from} text={"Sign in with Google"} />
+
+            <Divider sx={{ my: 3, typography: 'overline', color: 'text.disabled' }}>
+              OR
             </Divider>
 
             <LoginForm />
-
-            <Typography variant="body2" sx={{ mt: 3 }}>
-              Don't have an account?{''}
-              <Link to='/register'>Register</Link>
-            </Typography>
           </StyledContent>
         </Container>
       </StyledRoot>
