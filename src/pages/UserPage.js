@@ -32,7 +32,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGetMyVideosQuery } from '../redux/features/video/videoApi';
 import VideoForm from './VideoForm';
 
@@ -85,7 +85,7 @@ export default function ContentPage() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState('desc');
 
   const [selected, setSelected] = useState([]);
 
@@ -126,10 +126,18 @@ export default function ContentPage() {
 
   console.log(params, 'params from user page');
 
-  const { isFetching, isLoading, isError, error, data, refetch } = useGetMyVideosQuery(params, { refetchOnReconnect: true, refetchOnMountOrArgChange: true, refetchOnFocus: true, });
+  const { isFetching, isLoading, isError, error, data, refetch } = useGetMyVideosQuery(params, { 
+    refetchOnReconnect: true, 
+    refetchOnMountOrArgChange: true, 
+    refetchOnFocus: true,
+    skip: !userLoggedIn,
+  });
 
-  let content;
-  let USERLIST = data?.data || [];
+  // Use a single loading state that covers both initial loading and subsequent fetches
+  const isLoadingData = isLoading || isFetching;
+  
+  // Only use the data when not in a loading state or when it's the initial render
+  let USERLIST = isLoadingData && data?.data ? [] : (data?.data || []);
 
   console.log(data, 'data from user page');
 
@@ -138,6 +146,10 @@ export default function ContentPage() {
     setOpen(event.currentTarget);
     setEditingId(id)
   };
+
+  const handleDelete = (id) => {
+    console.log('delete here ', id);
+  }
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -185,6 +197,8 @@ export default function ContentPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const navigate = useNavigate();
+
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
@@ -194,6 +208,7 @@ export default function ContentPage() {
   const handleEdit = (id) => {
     console.log('edit here ', id);
     handleCloseMenu();
+    navigate(`/update-video/${id}`);
     setEditingId(id);
     setIsEditing(true);
   }
@@ -221,43 +236,78 @@ export default function ContentPage() {
           <Typography variant="h4" gutterBottom>
             My Videos
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            Upload New Video
-          </Button>
+          <Link to="/dashboard/video-upload">
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              Upload New Video
+            </Button>
+          </Link>
         </Stack>
 
-        <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+        {!userLoggedIn ? (
+          <Card>
+            <Box sx={{ py: 5, textAlign: 'center' }}>
+              <Typography variant="h6" paragraph>
+                Please <Link to="/login">Login</Link>
+              </Typography>
+              <Typography variant="body2">
+                You need to login to see your videos
+              </Typography>
+            </Box>
+          </Card>
+        ) : (
+          <Card>
+            <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-
-                  {
-                    isFetching || isLoading ? (
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <UserListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={USERLIST.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    onSelectAllClick={handleSelectAllClick}
+                  />
+                  <TableBody>
+                    {isLoadingData ? (
                       <TableRow>
-                        <TableCell colSpan={6}>
-                          <Box display="flex" justifyContent="center">
-                            <CircularProgress />
+                        <TableCell colSpan={8} align="center" sx={{ py: 3 }}>
+                          <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+                            <CircularProgress sx={{ mb: 2 }} />
+                            <Typography variant="body2" color="text.secondary">
+                              Loading videos...
+                            </Typography>
                           </Box>
+                        </TableCell>
+                      </TableRow>
+                    ) : isNotFound ? (
+                      <TableRow>
+                        <TableCell align="center" colSpan={8} sx={{ py: 3 }}>
+                          <Paper
+                            sx={{
+                              textAlign: 'center',
+                              p: 3,
+                            }}
+                          >
+                            <Typography variant="h6" paragraph>
+                              Not found
+                            </Typography>
+
+                            <Typography variant="body2">
+                              No results found for &nbsp;
+                              <strong>&quot;{filterName}&quot;</strong>.
+                              <br /> Try checking for typos or using complete words.
+                            </Typography>
+                          </Paper>
                         </TableCell>
                       </TableRow>
                     ) : (
                       filteredUsers.map((row) => {
-
                         const { _id: id, title, createdAt, status, viewsCount, likesCount, visibility } = row;
                         const selectedVideo = selected.indexOf(title) !== -1;
-                        console.log(row, 'row from user page');
+                        
                         return (
                           <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedVideo}>
                             <TableCell padding="checkbox">
@@ -313,7 +363,9 @@ export default function ContentPage() {
                                   Edit
                                 </MenuItem>
 
-                                <MenuItem sx={{ color: 'error.main' }}>
+                                <MenuItem
+                                  onClick={() => handleDelete(id)}
+                                  sx={{ color: 'error.main' }}>
                                   <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
                                   Delete
                                 </MenuItem>
@@ -322,79 +374,29 @@ export default function ContentPage() {
                           </TableRow>
                         );
                       })
-                    )
-                  }
+                    )}
 
-
-                  {emptyRows > 0 && page === 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            Not found
-                          </Typography>
-
-                          <Typography variant="body2">
-                            No results found for &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-
-                {
-                  !userLoggedIn && (
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center" colSpan={6} sx={{ py: 5 }}>
-                          <Paper
-                            sx={{
-                              textAlign: 'center',
-                            }}
-                          >
-                            <Typography variant="h6" paragraph>
-                              Please <Link to="/login">Login</Link>
-                            </Typography>
-
-                            <Typography variant="body2">
-                              You need to login to see your videos
-                            </Typography>
-                          </Paper>
-                        </TableCell>
+                    {emptyRows > 0 && page > 0 && !isLoadingData && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={8} />
                       </TableRow>
-                    </TableBody>
-                  )
-                }
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={data?.meta?.totalRecords}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={data?.meta?.totalRecords}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Card>
+        )}
       </Container>
 
 
