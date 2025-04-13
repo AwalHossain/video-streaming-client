@@ -176,9 +176,9 @@ export const socketApi = createApi({
                 // Use the same URL determination logic
                 const isProduction = window.location.hostname !== 'localhost';
                 const baseUrl = isProduction 
-                    ? 'http://178.128.81.174' 
-                    : (import.meta.env.VITE_BASE_URL || 'http://localhost:8000');
-                
+                ? 'https://api.178.128.81.174.nip.io' 
+                : (import.meta.env.VITE_BASE_URL || 'http://localhost:8000');
+            
                 socket = io(baseUrl, {
                     transports: ["websocket"],
                     path: '/socket.io',
