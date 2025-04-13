@@ -14,7 +14,7 @@ export function connectSocket(userId, dispatch) {
     // Determine the appropriate server URL based on environment
     const isProduction = window.location.hostname !== 'localhost';
     const baseUrl = isProduction 
-        ? 'http://178.128.81.174' 
+        ? 'https://api.178.128.81.174.nip.io' 
         : (import.meta.env.VITE_BASE_URL || 'http://localhost:8000');
     
     // Configure socket connection
