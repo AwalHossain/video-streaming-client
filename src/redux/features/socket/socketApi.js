@@ -13,9 +13,7 @@ export function connectSocket(userId, dispatch) {
     
     // Determine the appropriate server URL based on environment
     const isProduction = window.location.hostname !== 'localhost';
-    const baseUrl = isProduction 
-        ? 'http://178.128.81.174' 
-        : (import.meta.env.VITE_BASE_URL || 'http://localhost:8000');
+    const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
     
     // Configure socket connection
     socket = io(baseUrl, {
