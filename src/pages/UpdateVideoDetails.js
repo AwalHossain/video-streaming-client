@@ -535,6 +535,10 @@ const UpdateVideoDetails = () => {
                 id="tags"
                 options={VIDEO_TAGS}
                 disableCloseOnSelect
+                getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
+                isOptionEqualToValue={(option, value) => 
+                  option.id === value.id || option.name === value
+                }
                 value={formik.values.tags}
                 onChange={(event, newValue) => {
                   formik.setFieldValue('tags', newValue);
@@ -547,15 +551,15 @@ const UpdateVideoDetails = () => {
                       style={{ marginRight: 8 }}
                       checked={selected}
                     />
-                    {option}
+                    {option.name}
                   </li>
                 )}
                 renderTags={(value, getTagProps) =>
                   value.map((option, index) => (
                     <Chip
-                      label={option}
+                      label={typeof option === 'string' ? option : option.name}
                       {...getTagProps({ index })}
-                      key={option}
+                      key={typeof option === 'string' ? option : option.id}
                     />
                   ))
                 }
