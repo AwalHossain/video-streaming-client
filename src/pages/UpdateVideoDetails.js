@@ -125,7 +125,13 @@ const UpdateVideoDetails = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.put(`${REACT_APP_API_URL}/videos/update/${videoData._id}`, values, {
+        // Transform tags to strings before submission
+        const formattedValues = {
+          ...values,
+          tags: values.tags.map(tag => typeof tag === 'object' ? tag.name : tag)
+        };
+        
+        const response = await axios.put(`${REACT_APP_API_URL}/videos/update/${videoData._id}`, formattedValues, {
           headers: {
             Authorization: localStorage.getItem('accessToken'),
           },
