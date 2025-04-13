@@ -38,6 +38,12 @@ const validationSchema = yup.object({
     category: yup.string().required('Category is required'),
 });
 
+// Helper function to normalize tags - convert objects to strings if needed
+const normalizeTags = (tags) => {
+    if (!tags) return [];
+    return tags.map(tag => typeof tag === 'object' ? tag.name : tag);
+};
+
 const UploadModalContainer = styled(Paper)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -97,7 +103,7 @@ const VideoForm = ({ id, onClose }) => {
             language: data?.language || '',
             recordingDate: data?.recordingDate || "",
             category: data?.category || '',
-            tags: data?.tags || [],
+            tags: normalizeTags(data?.tags) || [],
         },
         enableReinitialize: true,
         validationSchema: validationSchema,
