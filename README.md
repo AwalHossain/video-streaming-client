@@ -11,7 +11,7 @@ This repository contains the frontend client for the Video Streaming Platform, b
 Visualizing how the frontend fits into the larger system:
 
 **Overall Architecture:**
-![System Architecture](./architecture.png)
+![System Architecture](./Architecture.png)
 
 **Upload & Streaming Sequence:**
 ![Streaming Sequence Diagram](./stream-diagram.png)
